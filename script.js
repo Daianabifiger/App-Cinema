@@ -1,9 +1,11 @@
 const btnToggle = document.getElementById ("btnToggleSidebar");
 const sidebar = document.getElementById("sidebarMenu");
-const promos = document.getElementById("contenedor-promos"); //lo hice con lo de clase
+const promos = document.getElementById("contenedor-promos"); 
 const secCartelera = document.getElementById("lista-cartelera");
 const secCombos = document.getElementById("lista-combos");
 const secEstrenos = document.getElementById("lista-estsrenos");
+const btnMenu = document.querySelectorAll(".custom-nav-link");
+const secVista = document.querySelectorAll(".seccion-vista");
 
 const promociones = [
     {
@@ -347,10 +349,6 @@ const proximosEstrenos = [
     }
 ];
 
-btnToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('expandido');
-});
-
 promociones.forEach( (promo) => {
     const card = `<div class="carousel-item active">
                     <div class="card">
@@ -405,4 +403,32 @@ proximosEstrenos.forEach( (estrenos) => {
                         </div>`
     
     secEstrenos.innerHTML += cardEstreno;
+})
+
+btnToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('expandido');
+});
+
+btnMenu.forEach((boton) => {
+
+    boton.addEventListener('click', (e) => {
+        e.preventDefault(); //evita que # haga saltar la pagina hacia arriba
+
+        const getID = boton.getAttribute('data-bs-target');
+
+        secVista.forEach((seccion) => {
+            seccion.classList.add('d-none');
+        })
+
+        const seccMostrar = document.getElementById(getID);
+
+        if (seccMostrar){
+            seccMostrar.classList.remove('d-none');
+        }
+
+        btnMenu.forEach((btn) => {
+            btn.classList.remove('active'); //desactivar
+        })
+        boton.classList.add('active'); //pintar el boton activo
+    })
 })
