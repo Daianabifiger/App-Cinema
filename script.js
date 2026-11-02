@@ -1,11 +1,14 @@
 const btnToggle = document.getElementById ("btnToggleSidebar");
 const sidebar = document.getElementById("sidebarMenu");
 const promos = document.getElementById("contenedor-promos"); 
-const secCartelera = document.getElementById("lista-cartelera");
-const secCombos = document.getElementById("lista-combos");
+const cartelera = document.getElementById("lista-cartelera");
+const combos = document.getElementById("lista-combos");
 const secEstrenos = document.getElementById("lista-estsrenos");
 const btnMenu = document.querySelectorAll(".custom-nav-link");
 const secVista = document.querySelectorAll(".seccion-vista");
+const inputBuscador = document.getElementById("input-buscador");
+const secCartelera = document.getElementById("cartelera");
+const secInicio = document.getElementById("inicio");
 
 const promociones = [
     {
@@ -375,7 +378,7 @@ peliculas.forEach( (peliculas) => {
                             </div>
                         </div>`
 
-    secCartelera.innerHTML += cardCart;
+    cartelera.innerHTML += cardCart;
 })
 
 combosCandyBar.forEach( (combo) => {
@@ -389,7 +392,7 @@ combosCandyBar.forEach( (combo) => {
                             </div>
                         </div>`
 
-    secCombos.innerHTML += cardCombo;
+    combos.innerHTML += cardCombo;
 })
 
 proximosEstrenos.forEach( (estrenos) => {
@@ -431,4 +434,47 @@ btnMenu.forEach((boton) => {
         })
         boton.classList.add('active'); //pintar el boton activo
     })
+})
+
+function mostrarPeliculas(listaAMostrar){
+    cartelera.innerHTML = ""; //vacia el contenedor para q no se acumule con las anteriores
+
+    //Sin resultado de busqueda
+    if ( listaAMostrar.length === 0){
+        cartelera.innerHTML = `<p class="text-white text-center w-100 mt-8">No se encontraron películas con ese nombre.</p>`;
+        return;
+    }
+
+    listaAMostrar.forEach((pelicula) => {
+        const cardCart = `<div class="card card-row mb-4 mx-4" style="max-width: 540px;">
+                            <img src="${pelicula.imagen}" class="card-img-start" alt="${pelicula.nombre}">
+                            <div class="card-body">
+                                <h4 class="card-title">${pelicula.nombre}</h4>
+                                <p class="card-text">${'Horarios: ' + pelicula.horarios} </p>
+                                <p class="card-text"> ${'Idioma: ' + pelicula.idioma} </p>
+                                <p class="card-text"><small class="fg-2">${pelicula.formatos + ' ' + pelicula.calificacion}</small></p>
+                                <a href="#" class="btn-solid bg-neon fg-black">Ver más</a>
+                            </div>
+                        </div>`
+
+        cartelera.innerHTML += cardCart;
+    });    
+}
+
+//ejecutamos para que se muestren todas
+mostrarPeliculas(peliculas);
+
+inputBuscador.addEventListener('input', (e) => {
+    const textUser = e.target.value.toLowerCase(); 
+
+    //filtro de pelicular
+    const peliculasFiltradas = peliculas.filter((pelicula) => {
+        return pelicula.nombre.toLowerCase().includes(textUser); //evalua auto si las letras tipeadas forman parte del titulo de una pelicula
+    });
+
+    //si el usuario empieza a escribir, redirecciona auto a cartelera
+    secVista.forEach(seccion => seccion.classList.add('d-none'));
+    secCartelera.classList.remove('d-none');
+
+    mostrarPeliculas(peliculasFiltradas);
 })
