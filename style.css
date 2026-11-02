@@ -1,0 +1,41 @@
+.bg-body {
+    /* Color base muy oscuro de respaldo */
+    background-color: #0b0c12;
+
+    /* Superposición de gradientes radiales */
+    background-image:
+        /* Brillo sutil violáceo/azulado arriba a la izquierda */
+        radial-gradient(circle at 0% 0%, rgba(45, 35, 80, 0.6) 0%, transparent 45%),
+        /* Brillo sutil verdoso/amarillento abajo a la derecha */
+        radial-gradient(circle at 100% 100%, rgba(40, 65, 45, 0.5) 0%, transparent 45%),
+        /* Fondo base oscuro general */
+        radial-gradient(circle at 50% 50%, #171822 0%, #0b0c12 100%);
+
+    background-size: cover; /*cubre la totalidad cualquier pantalla*/
+    background-repeat: no-repeat; 
+    background-attachment: fixed; /* Evita que el fondo se corte al hacer scroll */
+
+}
+
+.bg-neon {
+    background-color: #B2D528;
+}
+
+.color-neon {
+    color: #B2D528;
+}
+
+/* Anula el fondo sólido */
+.bg-transp {
+    background-color: transparent !important;
+}
+
+.custom-nav-link:hover:not(.active) {
+    color: #cddc39;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.custom-nav-link.active {
+    background-color: #cddc39 !important;
+    color: #111218 !important;
+}
