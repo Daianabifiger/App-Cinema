@@ -138,8 +138,9 @@ const peliculas = [
         genero: ["Terror", "Suspenso"],
         calificacion: "+16",
         idioma: "Subtitulada",
-        formatos: ["2D"],
-        imagen: "./assets/Cartelera/caja-demonio.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/caja-demonio.webp",
+        precio: 7500
     },
     {
         id: 2,
@@ -149,8 +150,9 @@ const peliculas = [
         genero: ["Terror", "Suspenso"],
         calificacion: "+16",
         idioma: "Doblada al Español",
-        formatos: ["2D"],
-        imagen: "./assets/Cartelera/caja-demonio.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/caja-demonio.webp",
+        precio: 7500
     },
     {
         id: 3,
@@ -160,8 +162,9 @@ const peliculas = [
         genero: ["Acción", "Ciencia Ficción"],
         calificacion: "+13",
         idioma: "Subtitulada",
-        formatos: ["2D", "IMAX"],
-        imagen: "./assets/Cartelera/godzilla.webp"
+        formatos: "4D",
+        imagen: "./assets/Cartelera/godzilla.webp",
+        precio: 11500
     },
     {
         id: 4,
@@ -171,8 +174,9 @@ const peliculas = [
         genero: ["Acción", "Ciencia Ficción"],
         calificacion: "+13",
         idioma: "Doblada al Español",
-        formatos: ["2D", "IMAX"],
-        imagen: "./assets/Cartelera/godzilla.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/godzilla.webp",
+        precio: 7500
     },
     {
         id: 5,
@@ -182,8 +186,9 @@ const peliculas = [
         genero: ["Animación", "Familiar"],
         calificacion: "ATP",
         idioma: "Doblada al Español",
-        formatos: ["2D", "3D"],
-        imagen: "./assets/Cartelera/gato-sombrero.webp"
+        formatos: "3D",
+        imagen: "./assets/Cartelera/gato-sombrero.webp",
+        precio: 9500
     },
     {
         id: 6,
@@ -193,8 +198,9 @@ const peliculas = [
         genero: ["Animación", "Aventura"],
         calificacion: "ATP",
         idioma: "Doblada al Español",
-        formatos: ["2D"],
-        imagen: "./assets/Cartelera/wildwood.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/wildwood.webp",
+        precio: 7500
     },
     {
         id: 7,
@@ -204,8 +210,9 @@ const peliculas = [
         genero: ["Animación", "Aventura"],
         calificacion: "ATP",
         idioma: "Subtitulada",
-        formatos: ["2D"],
-        imagen: "./assets/Cartelera/wildwood.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/wildwood.webp",
+        precio: 7500
     },
     {
         id: 8,
@@ -215,8 +222,9 @@ const peliculas = [
         genero: ["Thriller", "Drama"],
         calificacion: "+13",
         idioma: "Subtitulada",
-        formatos: ["2D"],
-        imagen: "./assets/Cartelera/ballena.webp"
+        formatos: "2D",
+        imagen: "./assets/Cartelera/ballena.webp",
+        precio: 7500
     }
 ];
 const combosCandyBar = [
@@ -360,6 +368,9 @@ const proximosEstrenos = [
     }
 ];
 
+//ejecutamos para que se muestren todas
+mostrarPeliculas(peliculas);
+
 promociones.forEach( (promo) => {
     const card = `<div class="carousel-item active">
                     <div class="card">
@@ -374,29 +385,15 @@ promociones.forEach( (promo) => {
     promos.innerHTML += card;
 })
 
-peliculas.forEach( (peliculas) => {
-    const cardCart = `<div class="card card-row mb-4 mx-4" style="max-width: 540px;">
-                            <img src="${peliculas.imagen}" class="card-img-start" alt="${peliculas.nombre}">
-                            <div class="card-body">
-                                <h4 class="card-title">${peliculas.nombre}</h4>
-                                <p class="card-text">${'Horarios: ' + peliculas.horarios} </p>
-                                <p class="card-text"> ${'Idioma: ' + peliculas.idioma} </p>
-                                <p class="card-text"><small class="fg-2">${peliculas.formatos + ' ' + peliculas.calificacion}</small></p>
-                                <a href="#" class="btn-solid bg-neon fg-black">Ver más</a>
-                            </div>
-                        </div>`
-
-    cartelera.innerHTML += cardCart;
-})
-
 combosCandyBar.forEach( (combo, index) => {
+    //agregarle el onclick al btn
     const cardCombo = `<div class="card card-row mb-4 mx-4" style="max-width: 620px;">
                             <img src="${combo.imagen}" class="card-img-start" alt="${combo.nombre}">
                             <div class="card-body">
                                 <h4 class="card-title">${combo.nombre}</h4>
                                 <p class="card-text">${combo.descripcion} </p>
                                 <p class="card-text">${'Precio: $' + combo.precio}</p>
-                                <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0" data-index="${index}">
+                                <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0" onclick="addCarrito(${index}, 'combo')"> 
                                     Agregar al carrito
                                 </button>
                             </div>
@@ -417,10 +414,6 @@ proximosEstrenos.forEach( (estrenos) => {
     
     secEstrenos.innerHTML += cardEstreno;
 })
-
-btnToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('expandido');
-});
 
 btnMenu.forEach((boton) => {
 
@@ -446,10 +439,14 @@ btnMenu.forEach((boton) => {
     })
 })
 
+btnToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('expandido');
+});
+
 inputBuscador.addEventListener('input', (e) => {
     const textUser = e.target.value.toLowerCase(); 
 
-    //filtro de pelicular
+    //filtro de peliculas
     const peliculasFiltradas = peliculas.filter((pelicula) => {
         return pelicula.nombre.toLowerCase().includes(textUser); //evalua auto si las letras tipeadas forman parte del titulo de una pelicula
     });
@@ -457,6 +454,10 @@ inputBuscador.addEventListener('input', (e) => {
     //si el usuario empieza a escribir, redirecciona auto a cartelera
     secVista.forEach(seccion => seccion.classList.add('d-none'));
     secCartelera.classList.remove('d-none');
+
+    inputBuscador.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') mostrarPeliculas(peliculasFiltradas);
+    })
 
     mostrarPeliculas(peliculasFiltradas);
 })
@@ -486,44 +487,39 @@ function mostrarPeliculas(listaAMostrar){
     });    
 }
 
-//ejecutamos para que se muestren todas
-mostrarPeliculas(peliculas);
+function addCarrito(index, tipo){
+    let producto;
+    const combo = combosCandyBar[index];
+    const itemExiste = carrito.find(item => item.nombre === combo.nombre);
 
-//existe despues que se ejecuta combosCandybar.forEach()
-const btnAddCarrito = document.querySelectorAll(".btn-add-combo");
+    if(tipo === "combo") {
+        producto = combosCandyBar[index];
+    } else if (tipo === "ticket"){
+        const peli = peliculas[index];
+        //adapto el objeto de la pelicula solo a los atributos necesarios
+        producto = {
+            nombre: peli.nombre,
+            precio: peli.precio,
+            imagen: peli.imagen,
+        };
+    }
 
-function mostrarToast(articulo){
-    mensajeToast.textContent = `Agregaste ${articulo} al carrito.`;
+    if(!producto) return;
+    
+    if (itemExiste){
+        itemExiste.cantidad++;
+    } else {
+        carrito.push ({
+            nombre: combo.nombre,
+            precio: combo.precio,
+            imagen: combo.imagen,
+            cantidad: 1
+        });
+    }
 
-    toastCarrito.classList.add('show');
-    clearTimeout(timerToast);
-
-    timerToast = setTimeout(() => {
-        toastCarrito.classList.remove('show');
-    }, 3000);
+    actualizarVistaCarrito();
+    mostrarToast(combo.nombre);
 }
-
-btnAddCarrito.forEach((boton) => {
-    boton.addEventListener('click', () => {
-        const index = boton.getAttribute('data-index');
-        const combo = combosCandyBar[index];
-        const itemExiste = carrito.find(item => item.nombre === combo.nombre);
-
-        if (itemExiste){
-            itemExiste.cantidad++;
-        } else {
-            carrito.push ({
-                nombre: combo.nombre,
-                precio: combo.precio,
-                imagen: combo.imagen,
-                cantidad: 1
-            });
-        }
-
-        actualizarVistaCarrito();
-        mostrarToast(combo.nombre);
-    })
-})
 
 function eliminarDelCarrito(indexCarrito){
     carrito.splice(indexCarrito, 1); //quita 1 elemento de esa psoicion
@@ -599,4 +595,15 @@ function actualizarVistaCarrito(){
             actualizarVistaCarrito();
         });
     });
+}
+
+function mostrarToast(articulo){
+    mensajeToast.textContent = `Agregaste ${articulo} al carrito.`;
+
+    toastCarrito.classList.add('show');
+    clearTimeout(timerToast);
+
+    timerToast = setTimeout(() => {
+        toastCarrito.classList.remove('show');
+    }, 3000);
 }
