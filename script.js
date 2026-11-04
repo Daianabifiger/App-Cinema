@@ -471,7 +471,7 @@ function mostrarPeliculas(listaAMostrar){
         return;
     }
 
-    listaAMostrar.forEach((pelicula) => {
+    listaAMostrar.forEach((pelicula, index) => {
         const cardCart = `<div class="card card-row mb-4 mx-4" style="max-width: 540px;">
                             <img src="${pelicula.imagen}" class="card-img-start" alt="${pelicula.nombre}">
                             <div class="card-body">
@@ -479,7 +479,7 @@ function mostrarPeliculas(listaAMostrar){
                                 <p class="card-text">${'Horarios: ' + pelicula.horarios} </p>
                                 <p class="card-text"> ${'Idioma: ' + pelicula.idioma} </p>
                                 <p class="card-text"><small class="fg-2">${pelicula.formatos + ' ' + pelicula.calificacion}</small></p>
-                                <a href="#" class="btn-solid bg-neon fg-black">Ver más</a>
+                                <button type="button" class="btn-solid bg-neon fg-black" onclick="verMas(${index})">Ver más</button>
                             </div>
                         </div>`
 
@@ -606,4 +606,14 @@ function mostrarToast(articulo){
     timerToast = setTimeout(() => {
         toastCarrito.classList.remove('show');
     }, 3000);
+}
+
+function verMas(index){
+    const peliElegida = peliculas[index];
+
+    //guarda la pelicula en el navegador convertida en JSON
+    localStorage.setItem('peliElegida', JSON.stringify(peliElegida));
+
+    //redirige a la pagina
+    window.open('reserva.html', '_blank');
 }
