@@ -562,8 +562,7 @@ function actualizarVistaCarrito(){
                                 </div>
 
                                 <!-- Selector desplegable de cantidad (1, 2, 3...) -->
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary my-2 select-cantidad-item" 
-                                        style="width: 70px;" data-index="${index}">
+                                <select class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3" data-index="${index}">
                                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => 
                                         `<option value="${num}" ${item.cantidad === num ? 'selected' : ''}>${num}</option>`
                                     ).join('')}

@@ -129,12 +129,12 @@
                     </div>
 
                     <!--Contenedor de cards promociones-->
-                    <div class="container my-5 pt-4">
+                    <div class="container my-5 pt-4 gap-3">
 
-                        <div id="carouselMultiple" class="carousel slide" data-bs-ends="stop" style="--bs-carousel-items: 3; --bs-carousel-items-gap: 1rem;">
+                        <div id="carouselMultiple" class="carousel slide carouselMultiple" data-bs-ends="stop">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="text-white mb-4 text-uppercase align-items-center justify-content-center">Promociones Vigentes</h3>
-                                <div>
+                                <div class="d-flex gap-2">
                                     <button class="btn-icon btn-sm" type="button" data-bs-target="#carouselMultiple" data-bs-slide="prev" style="--bs-carousel-control-icon-width: 1rem;">
                                         <span class="carousel-icon-prev" aria-hidden="true"></span>
                                         <span class="visually-hidden">Previous</span>
@@ -146,7 +146,7 @@
                                 </div>
                             </div>
 
-                            <div id="contenedor-promos" class="carousel-inner">
+                            <div id="contenedor-promos" class="carousel-inner d-flex flex-nowrap overflow-x-auto gap-3 scrollbar-invisible">
                                 <!--Arreglo de cards-->
                             </div>
                         </div>
@@ -156,7 +156,7 @@
                 <!--Section cartelera-->
                 <section id="cartelera" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h1 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Cartelera -</h1>
-                    <div id="lista-cartelera" class="row col-lg-6 justify-content-center">
+                    <div id="lista-cartelera" class="row lg:col-12 md:col-8 sm:col-6 justify-content-center">
                         <!--Cards de cartelera-->
                     </div>
                 </section>
@@ -164,7 +164,7 @@
                 <!--Section combos-->
                 <section id="combos" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h2 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Combos Candybar -</h2>
-                    <div id="lista-combos" class="row col-lg-6 justify-content-center">
+                    <div id="lista-combos" class="row lg:col-12 md:col-8 sm:col-6 justify-content-center">
                         <!--Cards de combos-->
                     </div>
                 </section>
@@ -172,7 +172,7 @@
                 <!--Section proximos estrenos-->
                 <section id="estrenos" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h2 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Próximos Estrenos -</h2>
-                    <div id="lista-estsrenos" class="row col-lg-6 justify-content-center">
+                    <div id="lista-estsrenos" class="row lg:col-12 md:col-10 sm:col-6 justify-content-center">
                         <!--Cards de estrenos-->
                     </div>
                 </section>

@@ -39,3 +39,24 @@
     background-color: #cddc39 !important;
     color: #111218 !important;
 }
+
+.scrollbar-invisible {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /*verificarla si esta bien usada */
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+        display: none;
+}
+
+/*Para que en sm se vea una sola slide y en md,lg se vean 3*/
+.carouselMultiple{
+    --bs-carousel-items: 1;
+    --bs-carousel-items-gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .carouselMultiple {
+        --bs-carousel-items: 3;
+    }
+}
