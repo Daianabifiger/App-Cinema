@@ -1,4 +1,4 @@
-let carrito = []; //para guardar items del carrito
+let carrito = JSON.parse(localStorage.getItem('carrito')) || []; //para guardar items del carrito
 let timerToast;
 
 const btnToggle = document.getElementById ("btnToggleSidebar");
@@ -135,7 +135,7 @@ const peliculas = [
         nombre: "La caja del demonio",
         duracion: 95,
         horarios: ["18:30 ", " 23:15"],
-        genero: ["Terror", "Suspenso"],
+        genero: ["Terror","Suspenso"],
         calificacion: "+16",
         idioma: "Subtitulada",
         formatos: "2D",
@@ -147,7 +147,7 @@ const peliculas = [
         nombre: "La caja del demonio",
         duracion: 95,
         horarios: ["20:45"],
-        genero: ["Terror", "Suspenso"],
+        genero: ["Terror", " Suspenso"],
         calificacion: "+16",
         idioma: "Doblada al Español",
         formatos: "2D",
@@ -370,6 +370,7 @@ const proximosEstrenos = [
 
 //ejecutamos para que se muestren todas
 mostrarPeliculas(peliculas);
+actualizarVistaCarrito();
 
 promociones.forEach( (promo) => {
     const card = `<div class="carousel-item active">
@@ -393,7 +394,7 @@ combosCandyBar.forEach( (combo, index) => {
                                 <h4 class="card-title">${combo.nombre}</h4>
                                 <p class="card-text">${combo.descripcion} </p>
                                 <p class="card-text">${'Precio: $' + combo.precio}</p>
-                                <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0" onclick="addCarrito(${index}, 'combo')"> 
+                                <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0" onclick="addCarrito(${index})"> 
                                     Agregar al carrito
                                 </button>
                             </div>
@@ -487,38 +488,19 @@ function mostrarPeliculas(listaAMostrar){
     });    
 }
 
-function addCarrito(index, tipo){
-    let producto;
+function addCarrito(index){
     const combo = combosCandyBar[index];
-    const itemExiste = carrito.find(item => item.nombre === combo.nombre);
 
-    if(tipo === "combo") {
-        producto = combosCandyBar[index];
-    } else if (tipo === "ticket"){
-        const peli = peliculas[index];
-        //adapto el objeto de la pelicula solo a los atributos necesarios
-        producto = {
-            nombre: peli.nombre,
-            precio: peli.precio,
-            imagen: peli.imagen,
-        };
-    }
-
-    if(!producto) return;
-    
-    if (itemExiste){
-        itemExiste.cantidad++;
-    } else {
-        carrito.push ({
-            nombre: combo.nombre,
-            precio: combo.precio,
-            imagen: combo.imagen,
-            cantidad: 1
-        });
-    }
+    saveItem({
+        nombre: combo.nombre,
+        precio: combo.precio,
+        imagen: combo.imagen,
+        categoria: "Candybar",
+        cantidad: 1
+    })
 
     actualizarVistaCarrito();
-    mostrarToast(combo.nombre);
+    mostrarToast(combo.nombre);    
 }
 
 function eliminarDelCarrito(indexCarrito){
@@ -527,6 +509,8 @@ function eliminarDelCarrito(indexCarrito){
 }
 
 function actualizarVistaCarrito(){
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+
     contenedorItemsCarrito.innerHTML = '';
 
     if(carrito.length === 0){
@@ -552,7 +536,7 @@ function actualizarVistaCarrito(){
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
-                                        <small class="text-secondary text-uppercase" style="font-size: 0.75rem;">Candybar</small>
+                                        <small class="text-secondary text-uppercase" style="font-size: 0.75rem;">${item.categoria || 'Candybar'}</small>
                                         <h6 class="mb-2 fw-normal text-white">${item.nombre}</h6>
                                     </div>
                                     <!-- Papelera arriba a la derecha -->
@@ -562,7 +546,7 @@ function actualizarVistaCarrito(){
                                 </div>
 
                                 <!-- Selector desplegable de cantidad (1, 2, 3...) -->
-                                <select class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3" data-index="${index}">
+                                <select class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3 ps-2" data-index="${index}">
                                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => 
                                         `<option value="${num}" ${item.cantidad === num ? 'selected' : ''}>${num}</option>`
                                     ).join('')}
@@ -614,5 +598,5 @@ function verMas(index){
     localStorage.setItem('peliElegida', JSON.stringify(peliElegida));
 
     //redirige a la pagina
-    window.open('reserva.html', '_blank');
+    window.location.href = 'reserva.html';
 }

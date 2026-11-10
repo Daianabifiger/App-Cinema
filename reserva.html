@@ -36,7 +36,7 @@
 
                     <!--Botones carrito, home y user-->
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" type="buttom" title="Volver a Inicio">
+                        <button id="back-home" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="buttom" title="Volver a Inicio" onclick="window.history.back()">
                             <i class="bi bi-house-door-fill"></i>
                         </button>
 
@@ -63,79 +63,83 @@
         <body class="container-fluid">
             <div class="row">
                 <!--Seleccion de ticket-->
-                <div class="col-12 col-lg-8">
-                    <div class="row">
-                        <div class="col-4 col-md-3">
+                <div class="col-12 lg:col-8">
+                    <div class="row ms-4">
+                        <div class="col-4 md:col-3">
                             <img src="..." alt="..." id="img-peli" class="img-fluid rounded">
                         </div>
-                        <div class="col-8 col-md-9">
+                        <div class="col-8 md:col-9 border rounded-3 py-4">
                             <h2 id="titulo-peli" class="fw-semibold fst-italic ps-4">Titulo de película</h2>
 
-                            <div class="d-flex justify-content-between mb-4 mx-4">
-                                <span id="genero-peli" class="ps-4">Géneros</span>
-                                <span id="calif-peli" class="ps-4">Calificacion</span>
-                                <span id="idioma-peli" class="ps-4">Idioma</span>
-                                <span id="formato-peli" class="ps-4">Formato</span>
+                            <div class="d-flex justify-content-between mb-4 mx-4 my-5">
+                                <span id="genero-peli" class="ps-4 fs-lg">Géneros</span>
+                                <span id="calif-peli" class="ps-4 fs-md">Calificacion</span>
                             </div>
 
-                            <div class="d-flex align-items-center  p-3">
-                                <button class="btn-solid d-flex gap-2 rounded-3 bg-neon fg-black m-2">Horario 1</button>
-                                <button class="btn-solid d-flex gap-2 rounded-3 bg-neon fg-black">Horario 2</button>
+                            <div class="d-flex mb-4 mx-4">
+                                <span id="idioma-peli" class="ps-4 fs-lg">Idioma</span>
+                                <span id="formato-peli" class="ps-4 fs-lg">Formato</span>
+                            </div>
+
+                            <div id="contenedor-horarios" class="d-flex align-items-center p-3">
+                                <!--Se crean los botones de horarios con js-->
                             </div>
                         </div>
                     </div>
 
                     <!--Selector de fechas-->
                     <div class="d-flex align-items-center justify-content-center gap-2 my-4">
-                        <button class="btn btn-link text-success p-0 me-2 border-0" aria-label="Anterior">
+                        <button id="btn-dia-prev" type="button" class="btn btn-link text-success p-0 me-2 border-0" aria-label="Anterior" onclick="moverFechas(-150)">
                             <i class="bi bi-chevron-left fs-3"></i>
                         </button>
 
                         <!--Contenedor scrolleable horizontal-->
-                        <div class="d-flex flex-nowrap overflow-x-auto gap-3 py-3 px-2 scrollbar-invisible">
+                        <div id="contenedor-fechas" class="d-flex flex-nowrap overflow-x-auto gap-3 py-3 px-2 scrollbar-invisible w-75">
                             <!--hacer con js-->
-                            <div class="card text-center border-success border-2 shadow-sm flex-shrink-0 w-6 rounded-6 pe-auto">
-                                <div class="card-body p-2">
-                                    <small class="d-block text-dark">Martes</small>
-                                    <span class="d-block fs-3 text-success fw-bold">3</span>
-                                    <small class="d-block text-dark">Noviembre</small>
-                                </div>
-                            </div>
-
-                            <!-- Tarjeta Inactiva 1 -->
-                            <div class="card text-center border-0 shadow-sm flex-shrink-0 w-6 rounded-6 pe-auto" >
-                                <div class="card-body p-2">
-                                    <small class="d-block text-dark">Miércoles</small>
-                                    <span class="d-block fs-3 text-success">4</span>
-                                    <small class="d-block text-dark">Noviembre</small>
-                                </div>
-                            </div>
-
                         </div>
-                        <button class="btn btn-link text-success p-0 ms-2 border-0" aria-label="Siguiente">
+
+                        <button id="btn-dia-next" type="button" class="btn btn-link text-success p-0 ms-2 border-0" aria-label="Siguiente" onclick="moverFechas(150)">
                             <i class="bi bi-chevron-right fs-3"></i>
                         </button>
                     </div>
 
-                    <!--Selección de tickets-->
-                    <div class="d-flex justify-content-between align-items-center p-3">
-                        <span id="formato-ticket">General</span>
-                        <span id="precio">$6500</span>
+                    <div class="d-flex justify-content-between align-items-center p-3 fw-semibold ms-4">
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Tipo de entrada</h5>
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Precio por unidad</h5>
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Cantidad</h5>
+                    </div>
 
+                    <!--Selección de tickets-->
+                    <div class="d-flex justify-content-between align-items-center px-7 border border-2 bg-transp fw-semibold rounded-3 ms-4">
+                        <span id="formato-ticket">General</span>
+                        <span id="precio" class="ps-5">$6500</span>
+
+                        <select id="cant-tickets" class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3 ps-2">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
                     </div>
                 </div>
 
                 <!--Resuemn y confirmacion-->
-                <div class="col-12 col-lg-4">
+                <div class="col-12 lg:col-4">
                     <div class="card p-4 h-100 d-flex flex-column">
-                        <h2>Resumen de reserva</h2>
-                        <p id="nomPeli">Película</p>
-                        <p id="diaSelec">Día seleccionado</p>
-                        <p id="horaSelec">Horario seleccionado</p>
-                        <p id="cantTickets">Cantidad de tickets</p>
-                        <p id="subtotal">Subtotal</p>
+                        <h2 class="mb-5">Resumen de reserva</h2>
+                        <p id="nomPeli">Película:</p>
+                        <p id="diaSelec">Día seleccionado:</p>
+                        <p id="horaSelec">Horario seleccionado:</p>
+                        <p id="cantTickets">Cantidad de tickets:</p>
+                        <p id="subtotal">Subtotal:</p>
 
-                        <button class="button mt-auto w-100 bg-neon fg-black fw-semibold rounded-pill">Añadir al carrito</button>
+                        <button id="addTicket-carrito" type="button" class="button mt-auto w-100 bg-neon fg-black fw-semibold rounded-pill" onclick="addReserva()" disabled>Añadir al carrito</button>
                     </div>
                 </div>
             </div>
@@ -197,7 +201,7 @@
         <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
 
         <!--JS personal-->
-        <script src="script.js"></script>
+        <script src="carrito.js"></script>
         <script src="reserva.js"></script>
     </body>
 
