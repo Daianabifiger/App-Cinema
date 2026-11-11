@@ -1,6 +1,6 @@
-let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+let carrito = obtenerCarritoStorage();
 let timerToast;
 
 const toastCarrito = document.getElementById("toast-carrito");
@@ -11,7 +11,6 @@ const contCarritoElemento = document.getElementById('contador-carrito');
 const login = document.getElementById('login');
 const userNameNav = document.getElementById('useName-nav');
 
-// Modal de Login 
 const modalLoginHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogLogin" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogLogin" style="max-width: 450px; width: 95%;">
                             <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
                                 <h4 class="dialog-title fw-bold color-neon mb-0" id="tituloDialogLogin">
@@ -64,7 +63,6 @@ const modalLoginHTML = `<dialog class="dialog text-bg-dark border border-seconda
                             </div>
                         </dialog>`;
 
-// Modal de Crear Usuario 
 const modalRegistroHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogRegistro" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogRegistro" style="max-width: 450px; width: 95%;">
                                 <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
                                     <h4 class="dialog-title fw-bold color-neon mb-0" id="tituloDialogRegistro">
@@ -119,25 +117,14 @@ const modalRegistroHTML = `<dialog class="dialog text-bg-dark border border-seco
                                 </div>
                             </dialog>`;
 
-// mete ambos <dialog> en el body ANTES de buscar sus elementos con getElementById
 document.body.insertAdjacentHTML('beforeend', modalLoginHTML);
 document.body.insertAdjacentHTML('beforeend', modalRegistroHTML);
 
-// referencias a los dos dialogs DESPPUES de crearlos
-const dialogLogin = document.getElementById('dialogLogin');
-const dialogRegistro = document.getElementById('dialogRegistro');
-const tituloDialogLogin = document.getElementById('tituloDialogLogin');
-const formLogin = document.getElementById('form-login');
-const formRegistro = document.getElementById('form-registro');
-const vistaPerfil = document.getElementById('vista-perfil');
-const linkIrRegistro = document.getElementById('link-ir-registro');
-const linkIrLogin = document.getElementById('link-ir-login');
-const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
-const btnCerrarLogin = document.getElementById('btn-cerrar-login');
-const btnCerrarRegistro = document.getElementById('btn-cerrar-registro');
-
-// addEventListener en el botón #login para abrir el primer dialog (Login)
+// Abrir el primer dialog (Login) al hacer click en el botón #login
 login.addEventListener('click', () => {
+    const dialogLogin = document.getElementById('dialogLogin');
+    const formLogin = document.getElementById('form-login');
+
     actualizarEstadoUsuario();
     limpiarValidaciones(formLogin);
     document.getElementById('error-login-general').classList.add('d-none');
@@ -146,9 +133,13 @@ login.addEventListener('click', () => {
     }
 });
 
-// addEventListener en el icon-link login a registro
-linkIrRegistro.addEventListener('click', (e) => {
+// Pasar del dialog Login al dialog Registro con el icon-link
+document.getElementById('link-ir-registro').addEventListener('click', (e) => {
     e.preventDefault();
+    const dialogLogin = document.getElementById('dialogLogin');
+    const dialogRegistro = document.getElementById('dialogRegistro');
+    const formRegistro = document.getElementById('form-registro');
+
     dialogLogin.close();
     limpiarValidaciones(formRegistro);
     if (!dialogRegistro.open) {
@@ -156,9 +147,13 @@ linkIrRegistro.addEventListener('click', (e) => {
     }
 });
 
-// addEventListener en el icon-link del modal registro para volver a login
-linkIrLogin.addEventListener('click', (e) => {
+// Volver del dialog Registro al dialog Login con el icon-link
+document.getElementById('link-ir-login').addEventListener('click', (e) => {
     e.preventDefault();
+    const dialogLogin = document.getElementById('dialogLogin');
+    const dialogRegistro = document.getElementById('dialogRegistro');
+    const formLogin = document.getElementById('form-login');
+
     dialogRegistro.close();
     limpiarValidaciones(formLogin);
     if (!dialogLogin.open) {
@@ -167,13 +162,140 @@ linkIrLogin.addEventListener('click', (e) => {
 });
 
 // Botones X para cerrar cada dialog
-btnCerrarLogin.addEventListener('click', () => {
-    dialogLogin.close();
+document.getElementById('btn-cerrar-login').addEventListener('click', () => {
+    document.getElementById('dialogLogin').close();
 });
 
-btnCerrarRegistro.addEventListener('click', () => {
-    dialogRegistro.close();
+document.getElementById('btn-cerrar-registro').addEventListener('click', () => {
+    document.getElementById('dialogRegistro').close();
 });
+
+// Validaciones en tiempo real en cada campo del formulario de registro
+document.getElementById('reg-nombre').addEventListener('input', validarNombreReg);
+document.getElementById('reg-email').addEventListener('input', validarEmailReg);
+document.getElementById('reg-user').addEventListener('input', validarUserReg);
+document.getElementById('reg-pass').addEventListener('input', () => {
+    validarPassReg();
+    if (document.getElementById('reg-pass2').value !== "") validarPass2Reg();
+});
+document.getElementById('reg-pass2').addEventListener('input', validarPass2Reg);
+
+// Envío del formulario de Crear Usuario
+document.getElementById('form-registro').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formRegistro = document.getElementById('form-registro');
+    const dialogRegistro = document.getElementById('dialogRegistro');
+    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    const nombreOk = validarNombreReg();
+    const emailOk = validarEmailReg();
+    const userOk = validarUserReg();
+    const passOk = validarPassReg();
+    const pass2Ok = validarPass2Reg();
+
+    if (nombreOk && emailOk && userOk && passOk && pass2Ok) {
+        const nuevoUsuario = {
+            nombre: document.getElementById('reg-nombre').value.trim(),
+            email: document.getElementById('reg-email').value.trim(),
+            user: document.getElementById('reg-user').value.trim(),
+            pass: document.getElementById('reg-pass').value
+        };
+
+        usuarios.push(nuevoUsuario);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        localStorage.setItem('usuarioActivo', JSON.stringify(nuevoUsuario));
+
+        actualizarEstadoUsuario();
+        guardarCarritoStorage();
+
+        formRegistro.reset();
+        limpiarValidaciones(formRegistro);
+        dialogRegistro.close();
+        mostrarNotificacion(`¡Cuenta creada! Bienvenido/a, ${nuevoUsuario.user}.`);
+    }
+});
+
+// Envío del formulario de Login
+document.getElementById('form-login').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formLogin = document.getElementById('form-login');
+    const dialogLogin = document.getElementById('dialogLogin');
+    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    const inputUser = document.getElementById('login-user');
+    const inputPass = document.getElementById('login-pass');
+    const errUser = document.getElementById('error-login-user');
+    const errPass = document.getElementById('error-login-pass');
+    const errGeneral = document.getElementById('error-login-general');
+
+    errGeneral.classList.add('d-none');
+
+    const userValido = marcarCampo(inputUser, errUser, inputUser.value.trim() !== "", "Ingresá tu usuario.");
+    const passValido = marcarCampo(inputPass, errPass, inputPass.value !== "", "Ingresá tu contraseña.");
+
+    if (!userValido || !passValido) return;
+
+    const usuarioEncontrado = usuarios.find(
+        u => (u.user.toLowerCase() === inputUser.value.trim().toLowerCase() || u.email.toLowerCase() === inputUser.value.trim().toLowerCase()) && u.pass === inputPass.value
+    );
+
+    if (!usuarioEncontrado) {
+        inputUser.classList.remove('is-valid');
+        inputPass.classList.remove('is-valid');
+        inputUser.classList.add('is-invalid');
+        inputPass.classList.add('is-invalid');
+        errUser.textContent = "";
+        errPass.textContent = "";
+        errGeneral.classList.remove('d-none');
+        return;
+    }
+
+    localStorage.setItem('usuarioActivo', JSON.stringify(usuarioEncontrado));
+
+    actualizarEstadoUsuario();
+    guardarCarritoStorage();
+
+    formLogin.reset();
+    limpiarValidaciones(formLogin);
+    dialogLogin.close();
+    mostrarNotificacion(`¡Bienvenido/a de nuevo, ${usuarioEncontrado.user}!`);
+});
+
+// Cerrar sesión
+document.getElementById('btn-cerrar-sesion').addEventListener('click', () => {
+    localStorage.removeItem('usuarioActivo');
+    actualizarEstadoUsuario();
+    guardarCarritoStorage();
+    document.getElementById('dialogLogin').close();
+    mostrarNotificacion("Cerraste sesión correctamente.");
+});
+
+// Actualizar carrito y usuario al cargar o volver a la página
+window.addEventListener('pageshow', () => {
+    carrito = obtenerCarritoStorage();
+    actualizarVistaCarrito();
+    actualizarEstadoUsuario();
+});
+
+// LEER (getItem): trae el carrito guardado cuando carga la página
+function obtenerCarritoStorage() {
+    if (usuarioActivo) {
+        return JSON.parse(sessionStorage.getItem('carrito')) || [];
+    } else {
+        return JSON.parse(localStorage.getItem('carrito')) || [];
+    }
+}
+
+// GUARDAR (setItem): guarda los cambios del carrito y limpia el otro storage
+function guardarCarritoStorage() {
+    if (usuarioActivo) {
+        sessionStorage.setItem('carrito', JSON.stringify(carrito));
+        localStorage.removeItem('carrito');
+    } else {
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        sessionStorage.removeItem('carrito');
+    }
+}
 
 // Función auxiliar para marcar un input como válido o inválido
 function marcarCampo(input, elementoError, esValido, mensajeError = "") {
@@ -199,6 +321,10 @@ function limpiarValidaciones(formulario) {
 
 // Actualiza la vista del navbar y del dialog de login según haya un usuario logueado o no
 function actualizarEstadoUsuario() {
+    const tituloDialogLogin = document.getElementById('tituloDialogLogin');
+    const formLogin = document.getElementById('form-login');
+    const vistaPerfil = document.getElementById('vista-perfil');
+
     usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
 
     if (usuarioActivo) {
@@ -305,96 +431,6 @@ function validarPass2Reg() {
     return marcarCampo(inputPass2, error, true);
 }
 
-// Validación del registro DESPUES de crearl el form
-document.getElementById('reg-nombre').addEventListener('input', validarNombreReg);
-document.getElementById('reg-email').addEventListener('input', validarEmailReg);
-document.getElementById('reg-user').addEventListener('input', validarUserReg);
-document.getElementById('reg-pass').addEventListener('input', () => {
-    validarPassReg();
-    if (document.getElementById('reg-pass2').value !== "") validarPass2Reg();
-});
-document.getElementById('reg-pass2').addEventListener('input', validarPass2Reg);
-
-// Envío del formulario de Crear Usuario
-formRegistro.addEventListener('submit', (e) => {
-    e.preventDefault();
-    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-
-    const nombreOk = validarNombreReg();
-    const emailOk = validarEmailReg();
-    const userOk = validarUserReg();
-    const passOk = validarPassReg();
-    const pass2Ok = validarPass2Reg();
-
-    if (nombreOk && emailOk && userOk && passOk && pass2Ok) {
-        const nuevoUsuario = {
-            nombre: document.getElementById('reg-nombre').value.trim(),
-            email: document.getElementById('reg-email').value.trim(),
-            user: document.getElementById('reg-user').value.trim(),
-            pass: document.getElementById('reg-pass').value
-        };
-
-        usuarios.push(nuevoUsuario);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        localStorage.setItem('usuarioActivo', JSON.stringify(nuevoUsuario));
-
-        formRegistro.reset();
-        limpiarValidaciones(formRegistro);
-        actualizarEstadoUsuario();
-        dialogRegistro.close();
-        mostrarNotificacion(`¡Cuenta creada! Bienvenido/a, ${nuevoUsuario.user}.`);
-    }
-});
-
-// Envío del formulario de Login
-formLogin.addEventListener('submit', (e) => {
-    e.preventDefault();
-    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-
-    const inputUser = document.getElementById('login-user');
-    const inputPass = document.getElementById('login-pass');
-    const errUser = document.getElementById('error-login-user');
-    const errPass = document.getElementById('error-login-pass');
-    const errGeneral = document.getElementById('error-login-general');
-
-    errGeneral.classList.add('d-none');
-
-    const userValido = marcarCampo(inputUser, errUser, inputUser.value.trim() !== "", "Ingresá tu usuario.");
-    const passValido = marcarCampo(inputPass, errPass, inputPass.value !== "", "Ingresá tu contraseña.");
-
-    if (!userValido || !passValido) return;
-
-    const usuarioEncontrado = usuarios.find(
-        u => (u.user.toLowerCase() === inputUser.value.trim().toLowerCase() || u.email.toLowerCase() === inputUser.value.trim().toLowerCase()) && u.pass === inputPass.value
-    );
-
-    if (!usuarioEncontrado) {
-        inputUser.classList.remove('is-valid');
-        inputPass.classList.remove('is-valid');
-        inputUser.classList.add('is-invalid');
-        inputPass.classList.add('is-invalid');
-        errUser.textContent = "";
-        errPass.textContent = "";
-        errGeneral.classList.remove('d-none');
-        return;
-    }
-
-    localStorage.setItem('usuarioActivo', JSON.stringify(usuarioEncontrado));
-    formLogin.reset();
-    limpiarValidaciones(formLogin);
-    actualizarEstadoUsuario();
-    dialogLogin.close();
-    mostrarNotificacion(`¡Bienvenido/a de nuevo, ${usuarioEncontrado.user}!`);
-});
-
-// Cerrar sesión
-btnCerrarSesion.addEventListener('click', () => {
-    localStorage.removeItem('usuarioActivo');
-    actualizarEstadoUsuario();
-    dialogLogin.close();
-    mostrarNotificacion("Cerraste sesión correctamente.");
-});
-
 function saveItem(nuevoProd){
     const itemExiste = carrito.find(item => item.nombre === nuevoProd.nombre);
 
@@ -405,7 +441,7 @@ function saveItem(nuevoProd){
         carrito.push (nuevoProd);
     }
 
-    localStorage.setItem('carrito', JSON.stringify(carrito));
+    guardarCarritoStorage();
 }
 
 function mostrarToast(articulo){
@@ -424,7 +460,7 @@ function mostrarNotificacion(texto){
 }
 
 function actualizarVistaCarrito(){
-    localStorage.setItem('carrito', JSON.stringify(carrito));
+    guardarCarritoStorage();
 
     contenedorItemsCarrito.innerHTML = '';
 
@@ -494,14 +530,3 @@ function actualizarVistaCarrito(){
         });
     });
 }
-
-actualizarVistaCarrito();
-actualizarEstadoUsuario();
-
-//para cuando vuelvo atras con window.history.back() me guarde la peli agregada y el usuario logueado
-window.addEventListener('pageshow', () => {
-    carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    actualizarVistaCarrito();
-    actualizarEstadoUsuario();
-});
-
