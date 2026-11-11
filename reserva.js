@@ -23,7 +23,7 @@ const fechasDisponibles = [
 ]
 
 actualizarSubtotal();
-mostrarFechas();
+
 
 selectTickets.addEventListener('change', actualizarSubtotal);
 
@@ -60,6 +60,7 @@ if (pelicula){
 function seleccionarHorario(hora) {
     horarioElegido = hora;
     document.getElementById('horaSelec').textContent = `Horario seleccionado: ${hora} hs.`;
+    verificarBoton();
 }
 
 function actualizarSubtotal (){
@@ -91,13 +92,18 @@ function mostrarFechas() {
     });
 
     // Actualizamos el texto en el Resumen de reserva con el día activo
-    const diaActual = fechasDisponibles[indiceDiaElegido];
-    document.getElementById('diaSelec').textContent = `Día seleccionado: ${diaActual.diaSemana} ${diaActual.numero} de ${diaActual.mes}`;
+    if(indiceDiaElegido !== null){
+        const diaActual = fechasDisponibles[indiceDiaElegido];
+        document.getElementById('diaSelec').textContent = `Día seleccionado: ${diaActual.diaSemana} ${diaActual.numero} de ${diaActual.mes}`;
+    }
 }
+
+mostrarFechas();
 
 function seleccionarDia(index) {
     indiceDiaElegido = index;
     mostrarFechas(); 
+    verificarBoton();
 }
 
 //scroll de fechas
@@ -106,12 +112,8 @@ function moverFechas(distancia) {
 }
 
 function addReserva(){
-    if(indiceDiaElegido === null || horarioElegido === ""){
-        alert("Por favor, seleccione un día y un horario para tu función.");
-        btnCarrito.disabled = true;
+    if (indiceDiaElegido === null || horarioElegido === "") {
         return;
-    } else {
-        btnCarrito.disabled = false;
     }
 
     const cantidad = Number(selectTickets.value);
@@ -122,8 +124,16 @@ function addReserva(){
         precio: pelicula.precio,
         imagen: pelicula.imagen,
         categoria: "Entrada",
-        cantidad: cantidadElegida
+        cantidad: cantidad
     });
-    
+
+    actualizarVistaCarrito();
+    mostrarToast(`entrada para ${pelicula.nombre}`);
 }
 
+function verificarBoton() {
+    if (indiceDiaElegido !== null && horarioElegido !== "") {
+        btnCarrito.disabled = false;
+        btnCarrito.classList.remove('opacity-50')
+    }
+}

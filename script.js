@@ -1,6 +1,3 @@
-let carrito = JSON.parse(localStorage.getItem('carrito')) || []; //para guardar items del carrito
-let timerToast;
-
 const btnToggle = document.getElementById ("btnToggleSidebar");
 const sidebar = document.getElementById("sidebarMenu");
 const promos = document.getElementById("contenedor-promos"); 
@@ -12,11 +9,6 @@ const secVista = document.querySelectorAll(".seccion-vista");
 const inputBuscador = document.getElementById("input-buscador");
 const secCartelera = document.getElementById("cartelera");
 const secInicio = document.getElementById("inicio");
-const contenedorItemsCarrito = document.getElementById('items-carrito');
-const totalCarritoElemento = document.getElementById('total-carrito');
-const contCarritoElemento = document.getElementById('contador-carrito');
-const toastCarrito = document.getElementById("toast-carrito");
-const mensajeToast = document.getElementById("mensaje-toast");
 
 const promociones = [
     {
@@ -472,7 +464,7 @@ function mostrarPeliculas(listaAMostrar){
         return;
     }
 
-    listaAMostrar.forEach((pelicula, index) => {
+    listaAMostrar.forEach((pelicula) => {
         const cardCart = `<div class="card card-row mb-4 mx-4" style="max-width: 540px;">
                             <img src="${pelicula.imagen}" class="card-img-start" alt="${pelicula.nombre}">
                             <div class="card-body">
@@ -480,7 +472,7 @@ function mostrarPeliculas(listaAMostrar){
                                 <p class="card-text">${'Horarios: ' + pelicula.horarios} </p>
                                 <p class="card-text"> ${'Idioma: ' + pelicula.idioma} </p>
                                 <p class="card-text"><small class="fg-2">${pelicula.formatos + ' ' + pelicula.calificacion}</small></p>
-                                <button type="button" class="btn-solid bg-neon fg-black" onclick="verMas(${index})">Ver más</button>
+                                <button type="button" class="btn-solid bg-neon fg-black" onclick="verMas(${pelicula.id})">Ver más</button>
                             </div>
                         </div>`
 
@@ -508,91 +500,8 @@ function eliminarDelCarrito(indexCarrito){
     actualizarVistaCarrito();
 }
 
-function actualizarVistaCarrito(){
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-
-    contenedorItemsCarrito.innerHTML = '';
-
-    if(carrito.length === 0){
-        contenedorItemsCarrito.innerHTML = `<p class="text-secondary text-center my-5">Tu carrito está vacío.</p>`;
-        totalCarritoElemento.textContent = "$ 0";
-        contCarritoElemento.textContent = "0";
-        return;
-    }
-
-    let total = 0;
-    let cant = 0;
-
-    carrito.forEach((item, index) => {
-        const subtotal = item.precio * item.cantidad;
-        total += subtotal;
-        cant += item.cantidad;
-
-        const itemHTML = `<div class="d-flex gap-3 py-3 border-bottom border-secondary">
-                            <!-- Imagen a la izquierda -->
-                            <img src="${item.imagen}" alt="${item.nombre}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
-                            
-                            <!-- Columna derecha con datos -->
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <small class="text-secondary text-uppercase" style="font-size: 0.75rem;">${item.categoria || 'Candybar'}</small>
-                                        <h6 class="mb-2 fw-normal text-white">${item.nombre}</h6>
-                                    </div>
-                                    <!-- Papelera arriba a la derecha -->
-                                    <button class="btn btn-sm text-secondary p-0 btn-eliminar-item" data-index="${index}" title="Eliminar">
-                                        <i class="bi bi-trash fs-5"></i>
-                                    </button>
-                                </div>
-
-                                <!-- Selector desplegable de cantidad (1, 2, 3...) -->
-                                <select class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3 ps-2" data-index="${index}">
-                                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => 
-                                        `<option value="${num}" ${item.cantidad === num ? 'selected' : ''}>${num}</option>`
-                                    ).join('')}
-                                </select>
-
-                                <!-- Precio del item -->
-                                <div class="fw-bold fs-6 mt-1">$ ${subtotal}</div>
-                            </div>
-                        </div>`;
-        
-        contenedorItemsCarrito.innerHTML += itemHTML;
-    });
-
-    totalCarritoElemento.textContent = `$${total}`;
-    if (contCarritoElemento) contCarritoElemento.textContent = cant;
-
-    document.querySelectorAll('.btn-eliminar-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const idx = btn.getAttribute('data-index');
-            carrito.splice(idx, 1);
-            actualizarVistaCarrito();
-        });
-    });
-
-    document.querySelectorAll('.select-cantidad-item').forEach(select => {
-        select.addEventListener('change', (e) => {
-            const idx = select.getAttribute('data-index');
-            carrito[idx].cantidad = Number(e.target.value);
-            actualizarVistaCarrito();
-        });
-    });
-}
-
-function mostrarToast(articulo){
-    mensajeToast.textContent = `Agregaste ${articulo} al carrito.`;
-
-    toastCarrito.classList.add('show');
-    clearTimeout(timerToast);
-
-    timerToast = setTimeout(() => {
-        toastCarrito.classList.remove('show');
-    }, 3000);
-}
-
-function verMas(index){
-    const peliElegida = peliculas[index];
+function verMas(id){
+    const peliElegida = peliculas.find(peli => peli.id === id);
 
     //guarda la pelicula en el navegador convertida en JSON
     localStorage.setItem('peliElegida', JSON.stringify(peliElegida));

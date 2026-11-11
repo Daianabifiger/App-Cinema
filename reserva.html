@@ -31,21 +31,21 @@
                         <div class="position-absolute top-0 bottom-0 start-0 d-flex align-items-center ms-3 z-3 pe-none">
                             <i class="bi bi-search text-secondary ps-3 pb-3"></i>
                         </div>
-                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" id="buscadorPelis" placeholder="Buscar película ...">
+                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" placeholder="Buscar película ...">
                     </div>
 
                     <!--Botones carrito, home y user-->
                     <div class="d-flex align-items-center gap-3">
-                        <button id="back-home" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="buttom" title="Volver a Inicio" onclick="window.history.back()">
+                        <button id="back-home" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Volver a Inicio" onclick="window.history.back()">
                             <i class="bi bi-house-door-fill"></i>
                         </button>
 
-                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" type="buttom" title="Perfil de usuario">
+                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Perfil de usuario">
                             <i class="bi bi-person-fill"></i>
                         </button>
 
                         <button class="btn custom-btn-circle rounded-circle position-relative color-neon" 
-                                type="buttom" 
+                                type="button" 
                                 title="Carrito"
                                 data-bs-toggle="drawer"
                                 data-bs-target="#panelCarrito"
@@ -60,13 +60,13 @@
             </nav>
         </header>
 
-        <body class="container-fluid">
+        <main class="container-fluid">
             <div class="row">
                 <!--Seleccion de ticket-->
                 <div class="col-12 lg:col-8">
                     <div class="row ms-4">
                         <div class="col-4 md:col-3">
-                            <img src="..." alt="..." id="img-peli" class="img-fluid rounded">
+                            <img src="" alt="poster pelicula" id="img-peli" class="img-fluid rounded">
                         </div>
                         <div class="col-8 md:col-9 border rounded-3 py-4">
                             <h2 id="titulo-peli" class="fw-semibold fst-italic ps-4">Titulo de película</h2>
@@ -114,7 +114,7 @@
                         <span id="formato-ticket">General</span>
                         <span id="precio" class="ps-5">$6500</span>
 
-                        <select id="cant-tickets" class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3 ps-2">
+                        <select id="cant-tickets" class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 w-3 ps-2">
                             <option value="1" selected>1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -139,11 +139,11 @@
                         <p id="cantTickets">Cantidad de tickets:</p>
                         <p id="subtotal">Subtotal:</p>
 
-                        <button id="addTicket-carrito" type="button" class="button mt-auto w-100 bg-neon fg-black fw-semibold rounded-pill" onclick="addReserva()" disabled>Añadir al carrito</button>
+                        <button id="addTicket-carrito" type="button" class="button mt-auto w-100 bg-neon fg-black fw-semibold rounded-pill opacity-50" onclick="addReserva()" disabled>Añadir al carrito</button>
                     </div>
                 </div>
             </div>
-        </body>
+        </main>
 
         <!--Carrito-->
         <dialog class="drawer drawer-end text-bg-dark max-w-100 w-25" tabindex="-1" id="panelCarrito" aria-labelledby="panelCarritoLabel">
@@ -179,7 +179,7 @@
         </dialog>
 
         <!--Alerta agregado correctamente-->
-        <div class="toast-container postion-fixed bottom-0 end-0 p-4 z-3">
+        <div class="toast-container position-fixed bottom-0 end-0 p-4 z-3">
             <div id="toast-carrito" class="toast bg-neon fg-black border-0 shadow-lg opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="toast-body fw-bold d-flex align-items-center gap-2">

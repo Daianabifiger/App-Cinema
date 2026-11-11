@@ -31,17 +31,17 @@
                         <div class="position-absolute top-0 bottom-0 start-0 d-flex align-items-center ms-3 z-3 pe-none">
                             <i class="bi bi-search text-secondary ps-3 pb-3"></i>
                         </div>
-                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" id="buscadorPelis" placeholder="Buscar película ...">
+                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" placeholder="Buscar película ...">
                     </div>
 
                     <!--Botones carrito y user-->
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" type="buttom" title="Perfil de usuario">
+                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Perfil de usuario">
                             <i class="bi bi-person-fill"></i>
                         </button>
 
                         <button class="btn custom-btn-circle rounded-circle position-relative color-neon" 
-                                type="buttom" 
+                                type="button" 
                                 title="Carrito"
                                 data-bs-toggle="drawer"
                                 data-bs-target="#panelCarrito"
@@ -57,7 +57,7 @@
         </header>
 
         <!--Body-->
-        <body class="container-fluid">
+        <main class="container-fluid">
             <div class="row m-0 p-0">
                 <div class="d-flex col-auto px-4 mt-4 gap-4">
                     <!--menu vertical colapsable-->
@@ -178,7 +178,7 @@
                 </section>
 
             </div>
-        </body>
+        </main>
 
         <!--Carrito-->
         <dialog class="drawer drawer-end text-bg-dark max-w-100 w-25" tabindex="-1" id="panelCarrito" aria-labelledby="panelCarritoLabel">
@@ -214,7 +214,7 @@
         </dialog>
 
         <!--Alerta agregado correctamente-->
-        <div class="toast-container postion-fixed bottom-0 end-0 p-4 z-3">
+        <div class="toast-container position-fixed bottom-0 end-0 p-4 z-3">
             <div id="toast-carrito" class="toast bg-neon fg-black border-0 shadow-lg opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="toast-body fw-bold d-flex align-items-center gap-2">
