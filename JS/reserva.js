@@ -24,7 +24,6 @@ const fechasDisponibles = [
 
 actualizarSubtotal();
 
-
 selectTickets.addEventListener('change', actualizarSubtotal);
 
 if (pelicula){
