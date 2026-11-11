@@ -1,3 +1,4 @@
+// Este archivo tiene la lógica compartida entre los dos HTML - ej: carrito, login, confirmacion y reservas 
 let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
 let carrito = obtenerCarritoStorage();
@@ -10,6 +11,8 @@ const totalCarritoElemento = document.getElementById('total-carrito');
 const contCarritoElemento = document.getElementById('contador-carrito');
 const login = document.getElementById('login');
 const userNameNav = document.getElementById('useName-nav');
+const btnFinalizar = document.getElementById('btn-finalizar');
+const panelCarrito = document.getElementById('panelCarrito');
 
 const modalLoginHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogLogin" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogLogin" style="max-width: 450px; width: 95%;">
                             <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
@@ -117,8 +120,80 @@ const modalRegistroHTML = `<dialog class="dialog text-bg-dark border border-seco
                                 </div>
                             </dialog>`;
 
+const modalConfirmarHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogConfirmarCompra" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogConfirmar" style="max-width: 680px; width: 95%;">
+                                <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
+                                    <h4 class="dialog-title fw-bold color-neon mb-0" id="tituloDialogConfirmar">
+                                        <i class="bi bi-cart-check-fill me-2"></i>Confirmar tu Compra
+                                    </h4>
+                                    <button type="button" id="btn-cerrar-confirmar" class="btn-close" aria-label="Close"></button>
+                                </div>
+
+                                <div class="dialog-body p-4">
+                                    <p class="text-secondary mb-3">
+                                        Revisá el detalle de tu carrito antes de reservar. ¿Estás seguro/a de confirmar la reserva?
+                                    </p>
+
+                                    <!-- Lista expandida de productos del carrito -->
+                                    <div id="lista-carrito-expandido" class="d-flex flex-column gap-3 pe-2" style="max-height: 360px; overflow-y: auto;">
+                                    </div>
+
+                                    <!-- Total y botones de acción -->
+                                    <div class="border-top border-secondary mt-4 pt-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="fs-5 text-white">Total a abonar en mostrador:</span>
+                                            <span id="total-carrito-expandido" class="fs-3 fw-bold color-neon">$0</span>
+                                        </div>
+
+                                        <div class="d-flex gap-3">
+                                            <button type="button" id="btn-cancelar-reserva" class="btn btn-outline-secondary w-50 rounded-pill py-2 fw-semibold">
+                                                Volver
+                                            </button>
+                                            <button type="button" id="btn-confirmar-reserva" class="btn bg-neon fg-black w-50 rounded-pill py-2 fw-bold text-uppercase">
+                                                Reservar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dialog>`;
+
+const modalCodigoHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" 
+                                    id="dialogCodigoReserva" 
+                                    data-bs-backdrop="static" 
+                                    tabindex="-1" 
+                                    aria-labelledby="tituloDialogCodigo" 
+                                    style="max-width: 480px; width: 95%;">
+                            <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
+                                <h4 class="dialog-title fw-bold color-neon mb-0" id="tituloDialogCodigo">
+                                    <i class="bi bi-ticket-perforated-fill me-2"></i>¡Reserva Confirmada!
+                                </h4>
+                                <button type="button" id="btn-cerrar-codigo" class="btn-close" aria-label="Close"></button>
+                            </div>
+
+                            <div class="dialog-body p-4 text-center">
+                                <i class="bi bi-check-circle-fill color-neon" style="font-size: 3.5rem;"></i>
+                                <h5 class="text-white fw-bold mt-3">Tu código de reserva es:</h5>
+
+                                <div class="my-3 py-3 px-4 border border-2 rounded-4 bg-dark">
+                                    <span id="codigo-reserva-generado" class="fs-2 fw-bold color-neon" style="letter-spacing: 4px;"></span>
+                                </div>
+
+                                <p class="text-white mb-2">
+                                    Total a pagar: <strong id="monto-final-mostrador" class="color-neon"></strong>
+                                </p>
+                                <p class="text-secondary small mb-4">
+                                    Presentá este código en el mostrador del cine para retirar tus entradas/combos y abonar de forma presencial.
+                                </p>
+
+                                <button type="button" id="btn-aceptar-codigo" class="btn bg-neon fg-black fw-bold w-100 rounded-pill py-2">
+                                    Entendido
+                                </button>
+                            </div>
+                        </dialog>`;
+
 document.body.insertAdjacentHTML('beforeend', modalLoginHTML);
 document.body.insertAdjacentHTML('beforeend', modalRegistroHTML);
+document.body.insertAdjacentHTML('beforeend', modalConfirmarHTML);
+document.body.insertAdjacentHTML('beforeend', modalCodigoHTML);
 
 // Abrir el primer dialog (Login) al hacer click en el botón #login
 login.addEventListener('click', () => {
@@ -133,7 +208,7 @@ login.addEventListener('click', () => {
     }
 });
 
-// Pasar del dialog Login al dialog Registro con el icon-link
+// Pasar del Login al Registro con el icon-link
 document.getElementById('link-ir-registro').addEventListener('click', (e) => {
     e.preventDefault();
     const dialogLogin = document.getElementById('dialogLogin');
@@ -147,7 +222,7 @@ document.getElementById('link-ir-registro').addEventListener('click', (e) => {
     }
 });
 
-// Volver del dialog Registro al dialog Login con el icon-link
+// Volver del Registro al Login con el icon-link
 document.getElementById('link-ir-login').addEventListener('click', (e) => {
     e.preventDefault();
     const dialogLogin = document.getElementById('dialogLogin');
@@ -168,6 +243,22 @@ document.getElementById('btn-cerrar-login').addEventListener('click', () => {
 
 document.getElementById('btn-cerrar-registro').addEventListener('click', () => {
     document.getElementById('dialogRegistro').close();
+});
+
+document.getElementById('btn-cerrar-confirmar').addEventListener('click', () => {
+    document.getElementById('dialogConfirmarCompra').close();
+});
+
+document.getElementById('btn-cancelar-reserva').addEventListener('click', () => {
+    document.getElementById('dialogConfirmarCompra').close();
+});
+
+document.getElementById('btn-cerrar-codigo').addEventListener('click', () => {
+    document.getElementById('dialogCodigoReserva').close();
+});
+
+document.getElementById('btn-aceptar-codigo').addEventListener('click', () => {
+    document.getElementById('dialogCodigoReserva').close();
 });
 
 // Validaciones en tiempo real en cada campo del formulario de registro
@@ -205,8 +296,15 @@ document.getElementById('form-registro').addEventListener('submit', (e) => {
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
         localStorage.setItem('usuarioActivo', JSON.stringify(nuevoUsuario));
 
+        // Si había armado un carrito sin loguearse, se lo pasamos a su nuevo usuario y limpiamos localStorage
+        if (carrito.length > 0) {
+            sessionStorage.setItem(`carrito_${nuevoUsuario.user}`, JSON.stringify(carrito));
+        }
+        localStorage.removeItem('carrito');
+
         actualizarEstadoUsuario();
-        guardarCarritoStorage();
+        carrito = obtenerCarritoStorage();
+        actualizarVistaCarrito();
 
         formRegistro.reset();
         limpiarValidaciones(formRegistro);
@@ -252,8 +350,16 @@ document.getElementById('form-login').addEventListener('submit', (e) => {
 
     localStorage.setItem('usuarioActivo', JSON.stringify(usuarioEncontrado));
 
+    // Si armó un carrito sin estar logueado y su carrito de usuario estaba vacío, se lo pasamos a su sesión
+    const carritoGuardadoUsuario = JSON.parse(sessionStorage.getItem(`carrito_${usuarioEncontrado.user}`)) || [];
+    if (carrito.length > 0 && carritoGuardadoUsuario.length === 0) {
+        sessionStorage.setItem(`carrito_${usuarioEncontrado.user}`, JSON.stringify(carrito));
+    }
+    localStorage.removeItem('carrito');
+
     actualizarEstadoUsuario();
-    guardarCarritoStorage();
+    carrito = obtenerCarritoStorage();
+    actualizarVistaCarrito();
 
     formLogin.reset();
     limpiarValidaciones(formLogin);
@@ -264,37 +370,142 @@ document.getElementById('form-login').addEventListener('submit', (e) => {
 // Cerrar sesión
 document.getElementById('btn-cerrar-sesion').addEventListener('click', () => {
     localStorage.removeItem('usuarioActivo');
+    localStorage.removeItem('carrito');
+
     actualizarEstadoUsuario();
-    guardarCarritoStorage();
+    carrito = [];
+    actualizarVistaCarrito();
+
     document.getElementById('dialogLogin').close();
     mostrarNotificacion("Cerraste sesión correctamente.");
 });
 
-// Actualizar carrito y usuario al cargar o volver a la página
-window.addEventListener('pageshow', () => {
-    carrito = obtenerCarritoStorage();
-    actualizarVistaCarrito();
-    actualizarEstadoUsuario();
+// Botón "Finalizar Compra" del carrito: verifica que esté logueado
+btnFinalizar.addEventListener('click', () => {
+    usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+
+    if (!usuarioActivo) {
+        if (panelCarrito && panelCarrito.open) panelCarrito.close();
+        mostrarNotificacion("Debés iniciar sesión antes de poder realizar una reserva.");
+        actualizarEstadoUsuario();
+        const dialogLogin = document.getElementById('dialogLogin');
+        if (!dialogLogin.open) dialogLogin.showModal();
+        return;
+    }
+
+    if (carrito.length === 0) {
+        mostrarNotificacion("Tu carrito está vacío. Agregá productos para reservar.");
+        return;
+    }
+
+    if (panelCarrito && panelCarrito.open) panelCarrito.close();
+    mostrarCarritoExpandido();
+    const dialogConfirmar = document.getElementById('dialogConfirmarCompra');
+    if (!dialogConfirmar.open) {
+        dialogConfirmar.showModal();
+    }
 });
 
-// LEER (getItem): trae el carrito guardado cuando carga la página
+// genera el código alfanumérico aleatorio
+document.getElementById('btn-confirmar-reserva').addEventListener('click', () => {
+    const dialogConfirmar = document.getElementById('dialogConfirmarCompra');
+    const dialogCodigo = document.getElementById('dialogCodigoReserva');
+
+    const totalCompra = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    const codigoAleatorio = generarCodigoAlfanumerico();
+
+    document.getElementById('codigo-reserva-generado').textContent = codigoAleatorio;
+    document.getElementById('monto-final-mostrador').textContent = `$${totalCompra}`;
+
+    // Vaciamos el carrito una vez confirmada la reserva
+    carrito = [];
+    guardarCarritoStorage();
+    actualizarVistaCarrito();
+
+    dialogConfirmar.close();
+    if (!dialogCodigo.open) {
+        dialogCodigo.showModal();
+    }
+});
+
+// Actualizar carrito y usuario al cargar o volver a la página
+window.addEventListener('pageshow', () => {
+    actualizarEstadoUsuario();
+    carrito = obtenerCarritoStorage();
+    actualizarVistaCarrito();
+});
+
+// LEER (getItem): trae el carrito guardado cuando carga la página o cambia de usuario
 function obtenerCarritoStorage() {
+    usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+
     if (usuarioActivo) {
-        return JSON.parse(sessionStorage.getItem('carrito')) || [];
+        return JSON.parse(sessionStorage.getItem(`carrito_${usuarioActivo.user}`)) || [];
     } else {
         return JSON.parse(localStorage.getItem('carrito')) || [];
     }
 }
 
-// GUARDAR (setItem): guarda los cambios del carrito y limpia el otro storage
+// GUARDAR (setItem): guarda los cambios del carrito en el usuario activo (sessionStorage) o en localStorage
 function guardarCarritoStorage() {
+    usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+
     if (usuarioActivo) {
-        sessionStorage.setItem('carrito', JSON.stringify(carrito));
+        sessionStorage.setItem(`carrito_${usuarioActivo.user}`, JSON.stringify(carrito));
         localStorage.removeItem('carrito');
     } else {
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        sessionStorage.removeItem('carrito');
+        if (carrito.length > 0) {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        } else {
+            localStorage.removeItem('carrito');
+        }
     }
+}
+
+// Renderiza el detalle del carrito más expandido dentro del modal de confirmación
+function mostrarCarritoExpandido() {
+    const contenedorExpandido = document.getElementById('lista-carrito-expandido');
+    const totalExpandido = document.getElementById('total-carrito-expandido');
+
+    contenedorExpandido.innerHTML = '';
+    let total = 0;
+
+    carrito.forEach((item) => {
+        const subtotal = item.precio * item.cantidad;
+        total += subtotal;
+        const categoria = item.categoria || (item.nombre.includes('hs)') ? 'Entrada' : 'Candybar');
+
+        contenedorExpandido.innerHTML += `
+            <div class="d-flex align-items-center gap-3 p-3 border border-secondary rounded-3 bg-dark">
+                <img src="${item.imagen}" alt="${item.nombre}" class="rounded" style="width: 90px; height: 90px; object-fit: cover;">
+                <div class="flex-grow-1">
+                    <span class="badge bg-neon fg-black text-uppercase mb-1">${categoria}</span>
+                    <h5 class="text-white mb-1">${item.nombre}</h5>
+                    <p class="text-secondary small mb-0">
+                        Cantidad: <strong class="text-white">${item.cantidad}</strong> x $${item.precio} c/u
+                    </p>
+                </div>
+                <div class="text-end">
+                    <span class="text-secondary small d-block">Subtotal</span>
+                    <span class="fs-5 fw-bold color-neon">$${subtotal}</span>
+                </div>
+            </div>`;
+    });
+
+    totalExpandido.textContent = `$${total}`;
+}
+
+// Genera un código alfanumérico aleatorio de 8 caracteres (ej: HW-A7K9P2)
+function generarCodigoAlfanumerico() {
+    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let codigo = 'HW-';
+
+    for (let i = 0; i < 6; i++) {
+        const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        codigo += caracteres[indiceAleatorio];
+    }
+
+    return codigo;
 }
 
 // Función auxiliar para marcar un input como válido o inválido
