@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hollywow Cinema - Reserva</title>
+        <link rel="icon" type="image/png" href="assets/icono - copia.png">
+
+        <!--Link Bootstrap--> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
+        <!--Iconos-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <!--Link css--> 
+        <link rel="stylesheet" href="./style.css">
+    </head>
+
+    <body class="bg-body bg-size min-vh-100">
+        
+        <!--header-->
+        <header>
+            <nav class="navbar-expand-lg">
+                <div class="container-fluid justify-content-between d-flex px-4">
+                    <a class="navbar-brand d-flex align-items-center gap-3 pe-5" href="index.html">
+                        <img src="assets/logonombre.png" alt="Logo" width="180" height="60" class="d-inline-block align-text-top">
+                    </a>
+                    
+                    <!--Barra de busqueda-->
+                    <div class="position-relative mx-auto w-50 pe-5 mt-4">
+                        <div class="position-absolute top-0 bottom-0 start-0 d-flex align-items-center ms-3 z-3 pe-none">
+                            <i class="bi bi-search text-secondary ps-3 pb-3"></i>
+                        </div>
+                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" placeholder="Buscar película ...">
+                    </div>
+
+                    <!--Botones carrito, home y user-->
+                    <div class="d-flex align-items-center gap-3">
+                        <button id="back-home" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Volver a Inicio" onclick="window.location.href='index.html'">
+                            <i class="bi bi-house-door-fill"></i>
+                        </button>
+
+                        <button id="login" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Perfil de usuario">
+                            <i class="bi bi-person-fill"></i>
+                        </button>
+                        <span id="useName-nav" class="text-white color-neon small ms-1 d-none"></span>
+
+                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" 
+                                type="button" 
+                                title="Carrito"
+                                data-bs-toggle="drawer"
+                                data-bs-target="#panelCarrito"
+                                aria-controls="panelCarrito">
+                            <i class="bi bi-cart-fill"></i>
+                            <span id="contador-carrito" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-neon fg-black">
+                                0
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+                <!--Seleccion de ticket-->
+                <div class="col-12 lg:col-8">
+                    <div class="row ms-4">
+                        <div class="col-4 md:col-3">
+                            <img src="" alt="poster pelicula" id="img-peli" class="img-fluid rounded">
+                        </div>
+                        <div class="col-8 md:col-9 border rounded-3 py-4">
+                            <h2 id="titulo-peli" class="fw-semibold fst-italic ps-4">Titulo de película</h2>
+
+                            <div class="d-flex justify-content-between mb-4 mx-4 my-5">
+                                <span id="genero-peli" class="ps-4 fs-lg">Géneros</span>
+                                <span id="calif-peli" class="ps-4 fs-md">Calificacion</span>
+                            </div>
+
+                            <div class="d-flex mb-4 mx-4">
+                                <span id="idioma-peli" class="ps-4 fs-lg">Idioma</span>
+                                <span id="formato-peli" class="ps-4 fs-lg">Formato</span>
+                            </div>
+
+                            <div id="contenedor-horarios" class="d-flex align-items-center p-3">
+                                <!--Se crean los botones de horarios con js-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Selector de fechas-->
+                    <div class="d-flex align-items-center justify-content-center gap-2 my-4">
+                        <button id="btn-dia-prev" type="button" class="btn btn-link text-success p-0 me-2 border-0" aria-label="Anterior" onclick="moverFechas(-150)">
+                            <i class="bi bi-chevron-left fs-3"></i>
+                        </button>
+
+                        <!--Contenedor scrolleable horizontal-->
+                        <div id="contenedor-fechas" class="d-flex flex-nowrap overflow-x-auto gap-3 py-3 px-2 scrollbar-invisible w-75">
+                            <!--hacer con js-->
+                        </div>
+
+                        <button id="btn-dia-next" type="button" class="btn btn-link text-success p-0 ms-2 border-0" aria-label="Siguiente" onclick="moverFechas(150)">
+                            <i class="bi bi-chevron-right fs-3"></i>
+                        </button>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 fw-semibold ms-4">
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Tipo de entrada</h5>
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Precio por unidad</h5>
+                        <h5 class="bg-inverse bg-neon opacity-75 px-2 rounded-3 py-2 fg-black">Cantidad</h5>
+                    </div>
+
+                    <!--Selección de tickets-->
+                    <div class="d-flex justify-content-between align-items-center px-7 border border-2 bg-transp fw-semibold rounded-3 ms-4">
+                        <span id="formato-ticket">General</span>
+                        <span id="precio" class="ps-5">$6500</span>
+
+                        <select id="cant-tickets" class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 w-3 ps-2">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--Resuemn y confirmacion-->
+                <div class="col-12 lg:col-4">
+                    <div class="card p-4 h-100 d-flex flex-column">
+                        <h2 class="mb-5">Resumen de reserva</h2>
+                        <p id="nomPeli">Película:</p>
+                        <p id="diaSelec">Día seleccionado:</p>
+                        <p id="horaSelec">Horario seleccionado:</p>
+                        <p id="cantTickets">Cantidad de tickets:</p>
+                        <p id="subtotal">Subtotal:</p>
+
+                        <button id="addTicket-carrito" type="button" class="button mt-auto w-100 bg-neon fg-black fw-semibold rounded-pill opacity-50" onclick="addReserva()" disabled>Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!--Carrito-->
+        <dialog class="drawer drawer-end text-bg-dark max-w-100 w-25" tabindex="-1" id="panelCarrito" aria-labelledby="panelCarritoLabel">
+
+            <!--Encabezado del carrito-->
+            <div class="drawer-header d-flex flex-column align-items-start border-bottom border-secondary pt-4 pb-2 px-4">
+                <button type="button" class="btn-close mt-1 mb-3" data-bs-dismiss="drawer" aria-label="Close"></button>
+                <h5 class="drawer-title fw-bold color-neon" id="panelCarritoLabel">
+                    <i class="bi bi-basket2-fill me-2"></i>Mi Carrito
+                </h5>
+            </div>
+
+            <!--Cuerpo carrito-->
+            <div class="drawer-body d-flex flex-column justify-content-between p-0 h-100">
+                <!-- Lista de productos -->
+                <div id="items-carrito" class="d-flex flex-column gap-3 px-4 py-3 overflow-auto flex-grow-1">
+                    <p class="text-secondary text-center my-5">Tu carrito está vacío.</p>
+                </div>
+
+                <!--pie carrito-->
+                <div class="border-top border-secondary px-6 pt-3 pb-6 mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-5">Total:</span>
+                        <span id="total-carrito" class="fs-4 fw-bold color-neon">$0</span>
+                    </div>
+                    <button id="btn-finalizar" class="btn bg-neon fg-black fw-bold w-100 rounded-pill py-2 text-uppercase">
+                        Finalizar Compra
+                    </button>
+                </div>
+
+            </div>
+
+        </dialog>
+
+        <!--Alerta agregado correctamente-->
+        <div class="toast-container position-fixed bottom-0 end-0 p-4 z-3">
+            <div id="toast-carrito" class="toast bg-neon fg-black border-0 shadow-lg opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="toast-body fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill fs-5"></i>
+                        <span id="mensaje-toast">Producto agregado al carrito correctamente.</span>
+                    </div>
+                    <button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <footer class="d-flex flex-column justify-content-center align-items-center py-4 mt-5">
+            <img src="assets/logonombre.png" alt="Hollywow Cinema" class="mb-2" width="180">
+            <p class="fw-bold fst-italic mb-0">Hollywow Cinema</p>
+        </footer>
+
+        <!--JS Bootstrap--> 
+        <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
+
+        <!--JS personal-->
+        <script src="JS/compartido.js"></script>
+        <script src="JS/reserva.js"></script>
+    </body>
+
+</html>

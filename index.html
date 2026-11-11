@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hollywow Cinema</title>
-        <link rel="icon" type="image/png" href="assets/icono.png">
+        <link rel="icon" type="image/png" href="assets/icono - copia.png">
 
         <!--Link Bootstrap--> 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
@@ -31,17 +31,26 @@
                         <div class="position-absolute top-0 bottom-0 start-0 d-flex align-items-center ms-3 z-3 pe-none">
                             <i class="bi bi-search text-secondary ps-3 pb-3"></i>
                         </div>
-                        <input type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" id="buscadorPelis" placeholder="Buscar película ...">
+                        <input id="input-buscador" type="text" class="form-control ps-12 rounded-pill bg-transp border border-light border-opacity-25 text-white py-2 ps-5 pe-3" placeholder="Buscar película ...">
                     </div>
 
                     <!--Botones carrito y user-->
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn custom-btn-circle rounded-circle d-flex justify-content-center align-items-center color-neon" type="buttom" title="Perfil de usuario">
+                        <button id="login" class="btn custom-btn-circle rounded-circle position-relative color-neon" type="button" title="Perfil de usuario">
                             <i class="bi bi-person-fill"></i>
                         </button>
+                        <span id="useName-nav" class="text-white color-neon small ms-1 d-none"></span>
 
-                        <button class="btn custom-btn-circle rounded-circle d-flex justify-content-center align-items-center color-neon" type="buttom" title="Perfil de usuario">
+                        <button class="btn custom-btn-circle rounded-circle position-relative color-neon" 
+                                type="button" 
+                                title="Carrito"
+                                data-bs-toggle="drawer"
+                                data-bs-target="#panelCarrito"
+                                aria-controls="panelCarrito">
                             <i class="bi bi-cart-fill"></i>
+                            <span id="contador-carrito" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-neon fg-black">
+                                0
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -49,7 +58,7 @@
         </header>
 
         <!--Body-->
-        <body class="container-fluid">
+        <main class="container-fluid">
             <div class="row m-0 p-0">
                 <div class="d-flex col-auto px-4 mt-4 gap-4">
                     <!--menu vertical colapsable-->
@@ -58,7 +67,7 @@
                         <!--Boton abrir y cerrar barra menu-->
                         <div class="mb-4">
                             <button id="btnToggleSidebar" 
-                                    class="btn custom-btn-circle d-flex justify-content-center align-items-center color-neon" 
+                                    class="btn custom-btn-circle d-flex justify-content-center align-items-center bg-neon fg-black" 
                                     data-bs-target=".texto-menu"
                                     data-bs-toggle="collapse"
                                     type="button" 
@@ -93,7 +102,7 @@
                 </div>
 
                 <!--Section inicio-->
-                <section id="inicio" class="flex-grow-1 col min-w-0 seccion-vista d-none"> <!--fle-grow-1 col hace que ocupe el resto de la pantalla-->
+                <section id="inicio" class="flex-grow-1 col min-w-0 seccion-vista"> <!--fle-grow-1 col hace que ocupe el resto de la pantalla-->
                     <!--Carrousel novedades-->
                     <div id="carouselExampleInterval" class="carousel slide" data-bs-autoplay="true" data-bs-ends="loop">
                         <div class="carousel-inner rounded-5 h-75">
@@ -121,12 +130,12 @@
                     </div>
 
                     <!--Contenedor de cards promociones-->
-                    <div class="container my-5 pt-4">
+                    <div class="container my-5 pt-4 gap-3">
 
-                        <div id="carouselMultiple" class="carousel slide" data-bs-ends="stop" style="--bs-carousel-items: 3; --bs-carousel-items-gap: 1rem;">
+                        <div id="carouselMultiple" class="carousel slide carouselMultiple" data-bs-ends="stop">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="text-white mb-4 text-uppercase align-items-center justify-content-center">Promociones Vigentes</h3>
-                                <div>
+                                <div class="d-flex gap-2">
                                     <button class="btn-icon btn-sm" type="button" data-bs-target="#carouselMultiple" data-bs-slide="prev" style="--bs-carousel-control-icon-width: 1rem;">
                                         <span class="carousel-icon-prev" aria-hidden="true"></span>
                                         <span class="visually-hidden">Previous</span>
@@ -138,7 +147,7 @@
                                 </div>
                             </div>
 
-                            <div id="contenedor-promos" class="carousel-inner">
+                            <div id="contenedor-promos" class="carousel-inner d-flex flex-nowrap overflow-x-auto gap-3 scrollbar-invisible">
                                 <!--Arreglo de cards-->
                             </div>
                         </div>
@@ -148,7 +157,7 @@
                 <!--Section cartelera-->
                 <section id="cartelera" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h1 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Cartelera -</h1>
-                    <div id="lista-cartelera" class="row col-lg-6 justify-content-center">
+                    <div id="lista-cartelera" class="row lg:col-12 md:col-8 sm:col-6 justify-content-center">
                         <!--Cards de cartelera-->
                     </div>
                 </section>
@@ -156,20 +165,67 @@
                 <!--Section combos-->
                 <section id="combos" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h2 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Combos Candybar -</h2>
-                    <div id="lista-combos" class="row col-lg-6 justify-content-center">
+                    <div id="lista-combos" class="row lg:col-12 md:col-8 sm:col-6 justify-content-center">
                         <!--Cards de combos-->
                     </div>
                 </section>
 
                 <!--Section proximos estrenos-->
-                <section id="estrenos" class="flex-grow-1 col min-w-0 seccion-vista">
+                <section id="estrenos" class="flex-grow-1 col min-w-0 seccion-vista d-none">
                     <h2 class="fst-italic fw-semibold my-5 d-flex justify-content-center text-uppercase">- Próximos Estrenos -</h2>
-                    <div id="lista-estsrenos" class="row col-lg-6 justify-content-center">
+                    <div id="lista-estsrenos" class="row lg:col-12 md:col-10 sm:col-6 justify-content-center">
                         <!--Cards de estrenos-->
                     </div>
                 </section>
+
             </div>
-        </body>
+        </main>
+
+        <!--Carrito-->
+        <dialog class="drawer drawer-end text-bg-dark max-w-100 w-25" tabindex="-1" id="panelCarrito" aria-labelledby="panelCarritoLabel">
+
+            <!--Encabezado del carrito-->
+            <div class="drawer-header d-flex flex-column align-items-start border-bottom border-secondary pt-4 pb-2 px-4">
+                <button type="button" class="btn-close mt-1 mb-3" data-bs-dismiss="drawer" aria-label="Close"></button>
+                <h5 class="drawer-title fw-bold color-neon" id="panelCarritoLabel">
+                    <i class="bi bi-basket2-fill me-2"></i>Mi Carrito
+                </h5>
+            </div>
+
+            <!--Cuerpo carrito-->
+            <div class="drawer-body d-flex flex-column justify-content-between p-0 h-100">
+                <!-- Lista de productos -->
+                <div id="items-carrito" class="d-flex flex-column gap-3 px-4 py-3 overflow-auto flex-grow-1">
+                    <p class="text-secondary text-center my-5">Tu carrito está vacío.</p>
+                </div>
+
+                <!--pie carrito-->
+                <div class="border-top border-secondary px-6 pt-3 pb-6 mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-5">Total:</span>
+                        <span id="total-carrito" class="fs-4 fw-bold color-neon">$0</span>
+                    </div>
+                    <button id="btn-finalizar" class="btn bg-neon fg-black fw-bold w-100 rounded-pill py-2 text-uppercase">
+                        Finalizar Compra
+                    </button>
+                </div>
+
+            </div>
+
+        </dialog>
+
+        <!--Alerta agregado correctamente-->
+        <div class="toast-container position-fixed bottom-0 end-0 p-4 z-3">
+            <div id="toast-carrito" class="toast bg-neon fg-black border-0 shadow-lg opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="toast-body fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill fs-5"></i>
+                        <span id="mensaje-toast">Producto agregado al carrito correctamente.</span>
+                    </div>
+                    <button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
 
         <!--Footer-->
         <footer class="d-flex flex-column justify-content-center align-items-center py-4 mt-5">
@@ -181,7 +237,8 @@
         <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
 
         <!--JS personal-->
-        <script src="script.js"></script>
+        <script src="JS/compartido.js"></script>
+        <script src="JS/script.js"></script>
     </body>
 
 </html>
