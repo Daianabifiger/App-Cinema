@@ -1,5 +1,5 @@
 // Este archivo tiene la lógica compartida entre los dos HTML - ej: carrito, login, confirmacion y reservas 
-let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+let usuarios = obtenerUsuariosStorage();
 let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
 let carrito = obtenerCarritoStorage();
 let timerToast;
@@ -13,6 +13,27 @@ const login = document.getElementById('login');
 const userNameNav = document.getElementById('useName-nav');
 const btnFinalizar = document.getElementById('btn-finalizar');
 const panelCarrito = document.getElementById('panelCarrito');
+
+const usuariosBase = [
+    {
+        nombre: "Daiana",
+        email: "daiana@gmail.com",
+        user: "daiana",
+        pass: "dai27ana"
+    },
+    {
+        nombre: "Tomas",
+        email: "tomas@gmail.com",
+        user: "Tomas",
+        pass: "tomi11"
+    },
+    {
+        nombre: "Juan Perez",
+        email: "juanperez@gmail.com",
+        user: "JuanPerez",
+        pass: "perez.5"
+    }
+];
 
 const modalLoginHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogLogin" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogLogin" style="max-width: 450px; width: 95%;">
                             <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
@@ -276,7 +297,7 @@ document.getElementById('form-registro').addEventListener('submit', (e) => {
     e.preventDefault();
     const formRegistro = document.getElementById('form-registro');
     const dialogRegistro = document.getElementById('dialogRegistro');
-    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    usuarios = obtenerUsuariosStorage();
 
     const nombreOk = validarNombreReg();
     const emailOk = validarEmailReg();
@@ -318,7 +339,7 @@ document.getElementById('form-login').addEventListener('submit', (e) => {
     e.preventDefault();
     const formLogin = document.getElementById('form-login');
     const dialogLogin = document.getElementById('dialogLogin');
-    usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    usuarios = obtenerUsuariosStorage();
 
     const inputUser = document.getElementById('login-user');
     const inputPass = document.getElementById('login-pass');
@@ -435,7 +456,25 @@ window.addEventListener('pageshow', () => {
     actualizarVistaCarrito();
 });
 
-// LEER (getItem): trae el carrito guardado cuando carga la página o cambia de usuario
+// Suma los nuevos usuarios registrados 
+function obtenerUsuariosStorage() {
+    const guardados = JSON.parse(localStorage.getItem('usuarios')) || [];
+    const listaUsuarios = [...usuariosBase];
+
+    guardados.forEach(uGuardado => {
+        const existe = listaUsuarios.some(
+            uBase => uBase.user.toLowerCase() === uGuardado.user.toLowerCase()
+        );
+        if (!existe) {
+            listaUsuarios.push(uGuardado);
+        }
+    });
+
+    localStorage.setItem('usuarios', JSON.stringify(listaUsuarios));
+    return listaUsuarios;
+}
+
+// trae el carrito guardado cuando carga la página o cambia de usuario
 function obtenerCarritoStorage() {
     usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
 
@@ -446,7 +485,7 @@ function obtenerCarritoStorage() {
     }
 }
 
-// GUARDAR (setItem): guarda los cambios del carrito en el usuario activo (sessionStorage) o en localStorage
+// guarda los cambios del carrito en el usuario activo (sessionStorage) o en localStorage
 function guardarCarritoStorage() {
     usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
 
@@ -462,7 +501,7 @@ function guardarCarritoStorage() {
     }
 }
 
-// Renderiza el detalle del carrito más expandido dentro del modal de confirmación
+// carrito más expandido dentro del modal de confirmación
 function mostrarCarritoExpandido() {
     const contenedorExpandido = document.getElementById('lista-carrito-expandido');
     const totalExpandido = document.getElementById('total-carrito-expandido');
