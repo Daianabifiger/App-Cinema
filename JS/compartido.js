@@ -1,19 +1,4 @@
 // Este archivo tiene la lógica compartida entre los dos HTML - ej: carrito, login, confirmacion y reservas 
-let usuarios = obtenerUsuariosStorage();
-let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
-let carrito = obtenerCarritoStorage();
-let timerToast;
-
-const toastCarrito = document.getElementById("toast-carrito");
-const mensajeToast = document.getElementById("mensaje-toast");
-const contenedorItemsCarrito = document.getElementById('items-carrito');
-const totalCarritoElemento = document.getElementById('total-carrito');
-const contCarritoElemento = document.getElementById('contador-carrito');
-const login = document.getElementById('login');
-const userNameNav = document.getElementById('useName-nav');
-const btnFinalizar = document.getElementById('btn-finalizar');
-const panelCarrito = document.getElementById('panelCarrito');
-
 const usuariosBase = [
     {
         nombre: "Daiana",
@@ -34,6 +19,22 @@ const usuariosBase = [
         pass: "perez.5"
     }
 ];
+
+let usuarios = obtenerUsuariosStorage();
+let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+let carrito = obtenerCarritoStorage();
+let timerToast;
+
+const toastCarrito = document.getElementById("toast-carrito");
+const mensajeToast = document.getElementById("mensaje-toast");
+const contenedorItemsCarrito = document.getElementById('items-carrito');
+const totalCarritoElemento = document.getElementById('total-carrito');
+const contCarritoElemento = document.getElementById('contador-carrito');
+const login = document.getElementById('login');
+const userNameNav = document.getElementById('useName-nav');
+const btnFinalizar = document.getElementById('btn-finalizar');
+const panelCarrito = document.getElementById('panelCarrito');
+
 
 const modalLoginHTML = `<dialog class="dialog text-bg-dark border border-secondary rounded-4 p-0" id="dialogLogin" data-bs-backdrop="static" tabindex="-1" aria-labelledby="tituloDialogLogin" style="max-width: 450px; width: 95%;">
                             <div class="dialog-header d-flex justify-content-between align-items-center border-bottom border-secondary px-4 py-3">
