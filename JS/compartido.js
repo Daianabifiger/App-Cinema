@@ -139,9 +139,9 @@ const modalConfirmarHTML = `<dialog class="dialog text-bg-dark border border-sec
 
                                     <!-- Total y botones de acción -->
                                     <div class="border-top border-secondary mt-4 pt-3">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="fs-5 text-white">Total a abonar en mostrador:</span>
-                                            <span id="total-carrito-expandido" class="fs-3 fw-bold color-neon">$0</span>
+                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                                            <span class="fs-6 sm:fs-5 text-white">Total a abonar en mostrador:</span>
+                                            <span id="total-carrito-expandido" class="fs-4 sm:fs-3 fw-bold color-neon">$0</span>
                                         </div>
 
                                         <div class="d-flex gap-3">
@@ -476,16 +476,18 @@ function mostrarCarritoExpandido() {
         const categoria = item.categoria || (item.nombre.includes('hs)') ? 'Entrada' : 'Candybar');
 
         contenedorExpandido.innerHTML += `
-            <div class="d-flex align-items-center gap-3 p-3 border border-secondary rounded-3 bg-dark">
-                <img src="${item.imagen}" alt="${item.nombre}" class="rounded" style="width: 90px; height: 90px; object-fit: cover;">
-                <div class="flex-grow-1">
-                    <span class="badge bg-neon fg-black text-uppercase mb-1">${categoria}</span>
-                    <h5 class="text-white mb-1">${item.nombre}</h5>
-                    <p class="text-secondary small mb-0">
-                        Cantidad: <strong class="text-white">${item.cantidad}</strong> x $${item.precio} c/u
-                    </p>
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-3 border border-secondary rounded-3 bg-dark">
+                <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 220px;">
+                    <img src="${item.imagen}" alt="${item.nombre}" class="rounded flex-shrink-0" style="width: 75px; height: 75px; object-fit: cover;">
+                    <div class="flex-grow-1 min-w-0">
+                        <span class="badge bg-neon fg-black text-uppercase mb-1">${categoria}</span>
+                        <h6 class="text-white mb-1 text-break">${item.nombre}</h6>
+                        <p class="text-secondary small mb-0">
+                            Cantidad: <strong class="text-white">${item.cantidad}</strong> x $${item.precio} c/u
+                        </p>
+                    </div>
                 </div>
-                <div class="text-end">
+                <div class="text-end ms-auto">
                     <span class="text-secondary small d-block">Subtotal</span>
                     <span class="fs-5 fw-bold color-neon">$${subtotal}</span>
                 </div>
@@ -708,7 +710,7 @@ function actualizarVistaCarrito(){
                                 </div>
 
                                 <!-- Selector desplegable de cantidad (1, 2, 3...) -->
-                                <select class="form-select form-select-sm bg-dark text-white justify-content-center border-secondary my-2 select-cantidad-item w-3 ps-2" data-index="${index}">
+                                <select class="form-select form-select-sm bg-dark text-white border-secondary my-2 select-cantidad-item w-auto ps-2" style="min-width: 70px;" data-index="${index}">
                                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => 
                                         `<option value="${num}" ${item.cantidad === num ? 'selected' : ''}>${num}</option>`
                                     ).join('')}
