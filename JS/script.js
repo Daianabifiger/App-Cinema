@@ -380,15 +380,19 @@ promociones.forEach( (promo) => {
 
 combosCandyBar.forEach( (combo, index) => {
     //agregarle el onclick al btn
-    const cardCombo = `<div class="card card-row mb-4 mx-4" style="max-width: 620px;">
-                            <img src="${combo.imagen}" class="card-img-start" alt="${combo.nombre}">
-                            <div class="card-body">
-                                <h4 class="card-title">${combo.nombre}</h4>
-                                <p class="card-text">${combo.descripcion} </p>
-                                <p class="card-text">${'Precio: $' + combo.precio}</p>
-                                <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0" onclick="addCarrito(${index})"> 
-                                    Agregar al carrito
-                                </button>
+    const cardCombo = `<div class="col-12 xl:col-6 d-flex justify-content-center">
+                            <div class="card card-row mb-3 w-100" style="max-width: 620px;">
+                                <img src="${combo.imagen}" class="card-img-start" alt="${combo.nombre}">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h4 class="card-title">${combo.nombre}</h4>
+                                        <p class="card-text">${combo.descripcion} </p>
+                                        <p class="card-text fw-bold color-neon">${'Precio: $' + combo.precio}</p>
+                                    </div>
+                                    <button type="button" class="btn-solid btn-add-combo bg-neon fg-black border-0 align-self-start mt-2" onclick="addCarrito(${index})"> 
+                                        Agregar al carrito
+                                    </button>
+                                </div>
                             </div>
                         </div>`
 
@@ -396,12 +400,14 @@ combosCandyBar.forEach( (combo, index) => {
 })
 
 proximosEstrenos.forEach( (estrenos) => {
-    const cardEstreno = `<div class="card mx-3 my-3" style="width: 18rem;">
-                            <div class="card-body">
-                                <img src="${estrenos.imagen}" class="card-img" alt="${estrenos.nombre}">
-                                <h5 class="mt-2 mb-0">${estrenos.nombre}</h5>
-                                <p class="card-text fg-2">${estrenos.descripcion}</p>
-                                <small class="fg-3">${'Fecha de estreno: ' + estrenos.fechaFormateada}</small>
+    const cardEstreno = `<div class="col-12 sm:col-6 lg:col-4 xl:col-3 d-flex justify-content-center">
+                            <div class="card my-2 w-100" style="max-width: 20rem;">
+                                <div class="card-body d-flex flex-column">
+                                    <img src="${estrenos.imagen}" class="card-img" alt="${estrenos.nombre}">
+                                    <h5 class="mt-2 mb-1">${estrenos.nombre}</h5>
+                                    <p class="card-text fg-2 flex-grow-1">${estrenos.descripcion}</p>
+                                    <small class="fg-3">${'Fecha de estreno: ' + estrenos.fechaFormateada}</small>
+                                </div>
                             </div>
                         </div>`
     
@@ -465,14 +471,18 @@ function mostrarPeliculas(listaAMostrar){
     }
 
     listaAMostrar.forEach((pelicula) => {
-        const cardCart = `<div class="card card-row mb-4 mx-4" style="max-width: 540px;">
-                            <img src="${pelicula.imagen}" class="card-img-start" alt="${pelicula.nombre}">
-                            <div class="card-body">
-                                <h4 class="card-title">${pelicula.nombre}</h4>
-                                <p class="card-text">${'Horarios: ' + pelicula.horarios} </p>
-                                <p class="card-text"> ${'Idioma: ' + pelicula.idioma} </p>
-                                <p class="card-text"><small class="fg-2">${pelicula.formatos + ' ' + pelicula.calificacion}</small></p>
-                                <button type="button" class="btn-solid bg-neon fg-black" onclick="verMas(${pelicula.id})">Ver más</button>
+        const cardCart = `<div class="col-12 xl:col-6 d-flex justify-content-center">
+                            <div class="card card-row mb-3 w-100" style="max-width: 540px;">
+                                <img src="${pelicula.imagen}" class="card-img-start" alt="${pelicula.nombre}">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h4 class="card-title">${pelicula.nombre}</h4>
+                                        <p class="card-text">${'Horarios: ' + pelicula.horarios} </p>
+                                        <p class="card-text"> ${'Idioma: ' + pelicula.idioma} </p>
+                                        <p class="card-text"><small class="fg-2">${pelicula.formatos + ' ' + pelicula.calificacion}</small></p>
+                                    </div>
+                                    <button type="button" class="btn-solid bg-neon fg-black align-self-start mt-2" onclick="verMas(${pelicula.id})">Ver más</button>
+                                </div>
                             </div>
                         </div>`
 

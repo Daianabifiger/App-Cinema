@@ -50,7 +50,7 @@ if (pelicula){
     contenedorHorarios.innerHTML = "";
 
     pelicula.horarios.forEach(hora => {
-        contenedorHorarios.innerHTML += `<button type="button" class="btn-solid rounded-3 bg-neon fg-black border-0 px-3 py-2 mx-3" onclick="seleccionarHorario('${hora}')">
+        contenedorHorarios.innerHTML += `<button type="button" class="btn-solid rounded-3 bg-neon fg-black border-0 px-3 py-2" onclick="seleccionarHorario('${hora}')">
                                             ${hora}
                                         </button>`
     });
